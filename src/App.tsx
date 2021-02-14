@@ -1,6 +1,7 @@
 import React, {ReactElement} from 'react';
 import { Auth } from '@auth';
 import styled from 'styled-components';
+import {DataProvider} from '@contexts';
 
 const AppWrapper = styled.div`
   height: 100%;
@@ -8,9 +9,11 @@ const AppWrapper = styled.div`
 
 function App(): ReactElement {
   return (
-    <AppWrapper>
-      <Auth/>
-    </AppWrapper>
+    <DataProvider>
+      <AppWrapper>
+        <Auth/>
+      </AppWrapper>
+    </DataProvider>
   );
 }
 

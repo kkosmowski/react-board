@@ -2,7 +2,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@auth": ["src/auth"]
+      "@auth": ["src/auth"],
+      "@interfaces": ["src/interfaces"],
+      "@contexts": ["src/contexts"],
+      "@services": ["src/services"],
+      "@utils": ["src/utils"]
     }
   }
 }
