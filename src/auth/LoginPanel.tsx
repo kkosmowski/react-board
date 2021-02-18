@@ -1,4 +1,4 @@
-import React, {ChangeEvent, ReactElement, useState} from 'react';
+import React, { ChangeEvent, FormEvent, ReactElement, useContext, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -12,9 +12,12 @@ import {
   Typography, FormHelperText, Button, CardActions
 } from '@material-ui/core';
 import styled from 'styled-components';
-import {Visibility, VisibilityOff} from '@material-ui/icons';
-import {endpoint} from '@utils';
-import {HttpService} from '@services';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { endpoint } from '@utils';
+import { HttpService } from '@services';
+import { LoginResponse } from '../domain/responses';
+import { DataContext } from '@contexts';
+import { Redirect } from 'react-router';
 
 const AuthCard = styled(Card)`
   width: 320px;
@@ -47,6 +50,7 @@ interface LoginForm {
 }
 
 export function LoginPanel(): ReactElement {
+  const { logged, setSession } = useContext(DataContext);
   const [form, setForm] = useState<LoginForm>({
     username: '',
     password: '',
@@ -75,68 +79,80 @@ export function LoginPanel(): ReactElement {
     });
   };
 
-  const handleLogin = () => {
-    HttpService.post<LoginForm>(endpoint.login, form).then(
-      () => {
-        console.log('login');
-      }
-    );
+  const handleLogin = (event: FormEvent) => {
+    event.preventDefault();
+
+    HttpService.post<LoginForm>(endpoint.login, form).then((response: Response) => {
+      response.json().then(({ token }: LoginResponse) => {
+        setSession({
+          token,
+          username: form.username,
+          persisted: form.remember,
+        });
+      });
+    });
   };
 
-  return (
-    <AuthCard>
-      <AuthCardContent>
-        <Typography variant="h6" component="span">Login</Typography>
+  return logged
+    ? <Redirect to="/" />
+    : (
+      <form onSubmit={ handleLogin }>
+        <AuthCard>
+          <AuthCardContent>
+            <Typography variant="h6" component="span">Login</Typography>
 
-        <FormControl>
-          <InputLabel htmlFor="login-username">Email</InputLabel>
-          <Input
-            id="login-username"
-            value={form.username}
-            onChange={handleChange('username')}
-          />
-          <FormHelperText> </FormHelperText>
-        </FormControl>
 
-        <FormControl>
-          <InputLabel htmlFor="login-password">Password</InputLabel>
-          <Input
-            id="login-password"
-            value={form.password}
-            type={showPassword ? 'text' : 'password'}
-            onChange={handleChange('password')}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="Toggle password visibility"
-                  onClick={handleShowPasswordToggle}
-                >
-                  {showPassword ? <Visibility/> : <VisibilityOff/>}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-          <FormHelperText> </FormHelperText>
-        </FormControl>
+            <FormControl>
+              <InputLabel htmlFor="login-username">Email</InputLabel>
+              <Input
+                id="login-username"
+                value={ form.username }
+                onChange={ handleChange('username') }
+              />
+              <FormHelperText> </FormHelperText>
+            </FormControl>
 
-        <FormControlLabel
-          value={form.remember}
-          control={<Checkbox color="primary" onChange={handleRememberMeChange}/>}
-          label="Remember me"
-          labelPlacement="end"
-        />
-      </AuthCardContent>
-      <AuthCardActions>
-        <Button
-          onClick={handleLogin}
-          variant="contained"
-          color="primary"
-          fullWidth
-        >
-          Login
-        </Button>
-        <Button variant="contained" fullWidth>Go back</Button>
-      </AuthCardActions>
-    </AuthCard>
-  );
+            <FormControl>
+              <InputLabel htmlFor="login-password">Password</InputLabel>
+              <Input
+                id="login-password"
+                value={ form.password }
+                type={ showPassword ? 'text' : 'password' }
+                onChange={ handleChange('password') }
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="Toggle password visibility"
+                      onClick={ handleShowPasswordToggle }
+                    >
+                      { showPassword ? <Visibility /> : <VisibilityOff /> }
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+              <FormHelperText> </FormHelperText>
+            </FormControl>
+
+            <FormControlLabel
+              value={ form.remember }
+              control={ <Checkbox color="primary" onChange={ handleRememberMeChange } /> }
+              label="Remember me"
+              labelPlacement="end"
+            />
+          </AuthCardContent>
+          <AuthCardActions>
+            <Button
+              onClick={ handleLogin }
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+            >
+              Login
+            </Button>
+            <Button variant="contained" fullWidth>Go back</Button>
+          </AuthCardActions>
+        </AuthCard>
+      </form>
+    );
 }

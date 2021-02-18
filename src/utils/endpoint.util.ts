@@ -1,4 +1,4 @@
-const API_URL = '';
+const API_URL = '//localhost:8000/';
 
 const endpointFactory = (route: string): string => (
   API_URL + route + '/'
@@ -10,4 +10,4 @@ interface Endpoint {
 
 export const endpoint: Endpoint = {
   login: endpointFactory('login'),
-} ;
+};

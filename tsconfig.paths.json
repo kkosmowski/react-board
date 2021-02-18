@@ -2,11 +2,27 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@auth": ["src/auth"],
-      "@interfaces": ["src/interfaces"],
-      "@contexts": ["src/contexts"],
-      "@services": ["src/services"],
-      "@utils": ["src/utils"]
+      "@auth": [
+        "src/auth"
+      ],
+      "@contexts": [
+        "src/contexts"
+      ],
+      "@enums": [
+        "src/domain/enums"
+      ],
+      "@interfaces": [
+        "src/domain/interfaces"
+      ],
+      "@main": [
+        "src/main"
+      ],
+      "@services": [
+        "src/services"
+      ],
+      "@utils": [
+        "src/utils"
+      ]
     }
   }
 }

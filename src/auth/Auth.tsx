@@ -8,7 +8,7 @@ const AuthWrapper = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #eee;
-`
+`;
 
 export function Auth() {
   return (
