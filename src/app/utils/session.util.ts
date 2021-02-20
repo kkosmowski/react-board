@@ -1,10 +1,11 @@
+import { SessionKey } from '@enums';
 import { Session } from '@interfaces';
 import Cookies from 'js-cookie';
 
 export class SessionUtil {
-  static alreadyLogged(): Session | null {
-    let token = Cookies.get('token');
-    let username = Cookies.get('username');
+  static checkIfSessionExists(): Session | null {
+    let token = Cookies.get(SessionKey.Token);
+    let username = Cookies.get(SessionKey.Username);
     if (token && username) {
       return {
         username,
@@ -12,8 +13,8 @@ export class SessionUtil {
         persisted: true,
       };
     } else {
-      let token = sessionStorage.getItem('token');
-      let username = sessionStorage.getItem('username');
+      let token = sessionStorage.getItem(SessionKey.Token);
+      let username = sessionStorage.getItem(SessionKey.Username);
       if (token && username) {
         return {
           username,

@@ -3,25 +3,40 @@
     "baseUrl": ".",
     "paths": {
       "@auth": [
-        "src/auth"
+        "src/app/auth"
       ],
       "@contexts": [
-        "src/contexts"
+        "src/app/contexts"
       ],
       "@enums": [
-        "src/domain/enums"
+        "src/app/domain/enums"
+      ],
+      "@images": [
+        "src/assets/images"
       ],
       "@interfaces": [
-        "src/domain/interfaces"
+        "src/app/domain/interfaces"
       ],
       "@main": [
-        "src/main"
+        "src/app/main"
+      ],
+      "@main/header": [
+        "src/app/main/header"
+      ],
+      "@main/footer": [
+        "src/app/main/footer"
+      ],
+      "@models": [
+        "src/app/domain/models"
+      ],
+      "@responses": [
+        "src/app/domain/responses"
       ],
       "@services": [
-        "src/services"
+        "src/app/services"
       ],
       "@utils": [
-        "src/utils"
+        "src/app/utils"
       ]
     }
   }

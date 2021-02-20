@@ -1,13 +1,18 @@
 const { alias, aliasJest } = require('react-app-rewire-alias')
 
 const aliasMap = {
-  '@auth': 'src/auth',
-  '@contexts': 'src/contexts',
-  '@enums': 'src/domain/enums',
-  '@interfaces': 'src/domain/interfaces',
-  '@main': 'src/main',
-  '@services': 'src/services',
-  '@utils': 'src/utils',
+  '@auth': 'src/app/auth',
+  '@contexts': 'src/app/contexts',
+  '@enums': 'src/app/domain/enums',
+  '@images': 'src/assets/images',
+  '@interfaces': 'src/app/domain/interfaces',
+  '@main': 'src/app/main',
+  '@main/footer': 'src/app/main/footer',
+  '@main/header': 'src/app/main/header',
+  '@models': 'src/app/domain/models',
+  '@responses': 'src/app/domain/responses',
+  '@services': 'src/app/services',
+  '@utils': 'src/app/utils',
 }
 
 module.exports = alias(aliasMap)

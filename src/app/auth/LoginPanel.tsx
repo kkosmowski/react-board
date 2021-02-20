@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, ReactElement, useContext, useState } from 'react';
+import { ChangeEvent, FormEvent, ReactElement, useContext, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -13,11 +13,9 @@ import {
 } from '@material-ui/core';
 import styled from 'styled-components';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { endpoint } from '@utils';
-import { HttpService } from '@services';
-import { LoginResponse } from '../domain/responses';
-import { DataContext } from '@contexts';
+import { SessionContext } from '@contexts';
 import { Redirect } from 'react-router';
+import { LoginForm } from '@interfaces';
 
 const AuthCard = styled(Card)`
   width: 320px;
@@ -43,14 +41,16 @@ const AuthCardActions = styled(CardActions)`
   }
 `;
 
-interface LoginForm {
-  username: string;
-  password: string;
-  remember: boolean;
-}
+const GrayButton = styled(Button)`
+  && {
+    background-color: #aaa;
+  }
+`;
+
+
 
 export function LoginPanel(): ReactElement {
-  const { logged, setSession } = useContext(DataContext);
+  const { logged, createSession } = useContext(SessionContext);
   const [form, setForm] = useState<LoginForm>({
     username: '',
     password: '',
@@ -81,16 +81,7 @@ export function LoginPanel(): ReactElement {
 
   const handleLogin = (event: FormEvent) => {
     event.preventDefault();
-
-    HttpService.post<LoginForm>(endpoint.login, form).then((response: Response) => {
-      response.json().then(({ token }: LoginResponse) => {
-        setSession({
-          token,
-          username: form.username,
-          persisted: form.remember,
-        });
-      });
-    });
+    createSession(form);
   };
 
   return logged
@@ -150,7 +141,7 @@ export function LoginPanel(): ReactElement {
             >
               Login
             </Button>
-            <Button variant="contained" fullWidth>Go back</Button>
+            <GrayButton variant="contained" fullWidth>Go back</GrayButton>
           </AuthCardActions>
         </AuthCard>
       </form>

@@ -10,4 +10,5 @@ interface Endpoint {
 
 export const endpoint: Endpoint = {
   login: endpointFactory('login'),
+  me: endpointFactory('users/me')
 };
