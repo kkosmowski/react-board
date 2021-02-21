@@ -2,16 +2,37 @@ import { ReactElement } from 'react';
 import { Auth } from '@auth';
 import styled, { ThemeProvider } from 'styled-components';
 import { DataProvider, SessionProvider } from '@contexts';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route } from 'react-router-dom';
 import { Shell } from '@main';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import React from 'react';
+
+function App(): ReactElement {
+  return (
+    <DataProvider>
+      <SessionProvider>
+        <MuiThemeProvider theme={ theme }>
+          <ThemeProvider theme={ theme }>
+            <AppWrapper>
+              <BrowserRouter>
+                <Route path="/auth" component={ Auth } />
+                <Route path="/home" component={ Shell } />
+                <Route path="*">
+                  <Redirect to="/home" />
+                </Route>
+              </BrowserRouter>
+            </AppWrapper>
+          </ThemeProvider>
+        </MuiThemeProvider>
+      </SessionProvider>
+    </DataProvider>
+  );
+}
 
 const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
 `;
-
 
 const theme = createMuiTheme({
   palette: {
@@ -30,24 +51,5 @@ const theme = createMuiTheme({
     type: 'dark'
   },
 });
-
-function App(): ReactElement {
-  return (
-    <DataProvider>
-      <SessionProvider>
-        <MuiThemeProvider theme={ theme }>
-          <ThemeProvider theme={ theme }>
-            <AppWrapper>
-              <BrowserRouter>
-                <Route path="/auth" component={ Auth } />
-                <Route path="/" component={ Shell } />
-              </BrowserRouter>
-            </AppWrapper>
-          </ThemeProvider>
-        </MuiThemeProvider>
-      </SessionProvider>
-    </DataProvider>
-  );
-}
 
 export default App;

@@ -65,27 +65,27 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
 
   useEffect(() => {
     if (logged) {
-      HttpService.get(endpoint.me, session.token).then((response: Response) => {
-        response.json().then((data: MeResponse) => {
+      HttpService
+        .get(endpoint.me, session.token)
+        .then((data: MeResponse) => {
           setUser({
             username: session.username,
             role: data.role
           });
         });
-      });
     }
   }, [logged]);
 
   const createSession = (form: LoginForm): void => {
-    HttpService.post<LoginForm>(endpoint.login, form).then((response: Response) => {
-      response.json().then(({ token }: LoginResponse) => {
+    HttpService
+      .post<LoginForm>(endpoint.login, form)
+      .then(({ token }: LoginResponse) => {
         setSession({
           token,
           username: form.username,
           persisted: form.remember,
         });
       });
-    });
   };
 
   return (

@@ -20,11 +20,17 @@
       "@main": [
         "src/app/main"
       ],
-      "@main/header": [
-        "src/app/main/header"
+      "@main/category": [
+        "src/app/main/category"
       ],
       "@main/footer": [
         "src/app/main/footer"
+      ],
+      "@main/header": [
+        "src/app/main/header"
+      ],
+      "@main/thread": [
+        "src/app/main/thread"
       ],
       "@models": [
         "src/app/domain/models"

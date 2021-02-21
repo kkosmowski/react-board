@@ -1,21 +1,15 @@
-import { useContext } from 'react';
-import { SessionContext } from '@contexts';
-import { Redirect } from 'react-router';
 import { Header } from '@main/header';
+import { CategoriesList, Category } from '@main/category';
+import { Route, useRouteMatch } from 'react-router-dom';
 
 export function Shell() {
-  const { logged } = useContext(SessionContext);
+  const match = useRouteMatch();
 
-  console.log('test');
-  console.log(logged);
-
-  return typeof logged === 'boolean'
-    ? logged
-      ? (
-        <>
-          <Header />
-        </>
-      )
-      : <Redirect to="/auth" />
-    : <></>;
+  return (
+    <>
+      <Header />
+      <Route path={ match.url } component={ CategoriesList } exact />
+      <Route path={ match.url + '/category/:categoryId' } component={ Category } />
+    </>
+  );
 }

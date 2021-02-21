@@ -17,38 +17,6 @@ import { SessionContext } from '@contexts';
 import { Redirect } from 'react-router';
 import { LoginForm } from '@interfaces';
 
-const AuthCard = styled(Card)`
-  width: 320px;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-`;
-
-const AuthCardContent = styled(CardContent)`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`;
-
-const AuthCardActions = styled(CardActions)`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  && > :not(:first-child) {
-    margin-left: 0;
-    margin-top: 8px;
-  }
-`;
-
-const GrayButton = styled(Button)`
-  && {
-    background-color: #aaa;
-  }
-`;
-
-
-
 export function LoginPanel(): ReactElement {
   const { logged, createSession } = useContext(SessionContext);
   const [form, setForm] = useState<LoginForm>({
@@ -85,7 +53,7 @@ export function LoginPanel(): ReactElement {
   };
 
   return logged
-    ? <Redirect to="/" />
+    ? <Redirect to="/home" />
     : (
       <form onSubmit={ handleLogin }>
         <AuthCard>
@@ -147,3 +115,33 @@ export function LoginPanel(): ReactElement {
       </form>
     );
 }
+
+const AuthCard = styled(Card)`
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+`;
+
+const AuthCardContent = styled(CardContent)`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+const AuthCardActions = styled(CardActions)`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  && > :not(:first-child) {
+    margin-left: 0;
+    margin-top: 8px;
+  }
+`;
+
+const GrayButton = styled(Button)`
+  && {
+    background-color: #aaa;
+  }
+`;
