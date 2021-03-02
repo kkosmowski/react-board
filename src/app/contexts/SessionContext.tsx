@@ -1,9 +1,10 @@
 import { createContext, ReactElement, useContext, useEffect, useState } from 'react';
 import { LoginForm, Session } from '@interfaces';
-import { endpoint, SessionUtil } from '@utils';
+import { endpoint, endpointWithProp, SessionUtil } from '@utils';
 import { HttpService } from '@services';
 import { LoginResponse, MeResponse } from '@responses';
 import { DataContext } from './DataContext';
+import { User } from '@models';
 
 interface SessionProviderProps {
   children: ReactElement | ReactElement[];
@@ -14,6 +15,9 @@ interface SessionContextProps {
   session: Session;
   createSession: (form: LoginForm) => Promise<void>;
   logout: () => void;
+  user: User;
+  setUser: (user: User) => User;
+  getUser: (userId: string) => void;
 }
 
 const initialSession = {
@@ -22,23 +26,12 @@ const initialSession = {
   persisted: false,
 };
 
-const SessionContext = createContext<SessionContextProps>({
-  logged: null,
-  session: {
-    username: '',
-    token: '',
-    persisted: false,
-  },
-  createSession: (form: LoginForm) => Promise.resolve(),
-  logout: () => ({})
-});
-
 const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
-  const { setUser } = useContext(DataContext);
   const { Provider } = SessionContext;
 
   const [session, setSession] = useState<Session>(initialSession);
   const [logged, setLogged] = useState<boolean | null>(null);
+  const [user, setUser] = useState<User>(initialUser);
 
   useEffect(() => {
     if (session.token && session.username) {
@@ -54,6 +47,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
         setLogged(false);
       }
     }
+    console.log('session', session);
   }, [session]);
 
   useEffect(() => {
@@ -62,6 +56,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
         .get(endpoint.me, session.token)
         .then((data: MeResponse) => {
           setUser({
+            id: '1',
             username: session.username,
             role: data.role
           });
@@ -81,20 +76,55 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
       });
   };
 
-   const logout = (): void => {
-     setLogged(false);
-     SessionUtil.clearSession(session.persisted);
-   }
+  const logout = (): void => {
+    setLogged(false);
+    SessionUtil.clearSession(session.persisted);
+  };
+
+  const getUser = (userId: string): void => {
+    HttpService
+      .get(endpointWithProp.user(userId), session.token)
+      .then((user: Partial<User>) => ({
+        ...user,
+        id: userId,
+      }) as User)
+      .then((user: User) => {
+        setUser(user);
+      });
+  };
 
   return (
     <Provider value={ {
       logged, session,
       createSession,
       logout,
+      user, setUser, getUser,
     } as SessionContextProps }>
       { children }
     </Provider>
   );
 };
+
+const initialUser: User = {
+  id: '',
+  username: '',
+  role: null,
+};
+
+const initialData: SessionContextProps = {
+  logged: null,
+  session: {
+    username: '',
+    token: '',
+    persisted: false,
+  },
+  createSession: (form: LoginForm) => Promise.resolve(),
+  logout: () => ({}),
+  user: initialUser,
+  setUser: (initialUser: User) => initialUser,
+  getUser: (userId: string) => ({}),
+};
+
+const SessionContext = createContext<SessionContextProps>(initialData);
 
 export { SessionProvider, SessionContext };

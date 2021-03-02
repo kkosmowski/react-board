@@ -2,6 +2,7 @@ import { Header } from '@main/header';
 import { CategoriesList, Category } from '@main/category';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { Thread } from '@main/thread';
+import { Profile } from '@main/profile';
 
 export function Shell() {
   const { url } = useRouteMatch();
@@ -18,6 +19,9 @@ export function Shell() {
         </Route>
         <Route exact path={ `${ url }/category/:categoryId/thread/:threadId` }>
           <Thread />
+        </Route>
+        <Route path={ `${ url }/users/:userId` }>
+          <Profile />
         </Route>
         <Route path="*">
           <Redirect to="/home" />

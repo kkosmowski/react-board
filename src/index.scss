@@ -27,12 +27,26 @@ body,
 a {
   color: inherit;
   font: inherit;
+
+  &:link:not(.MuiLink-root) {
+    text-decoration: none;
+  }
+
+  &:hover:not(.MuiLink-root) {
+    text-decoration: underline;
+  }
 }
 
-a:link:not(.MuiLink-root) {
-  text-decoration: none;
-}
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 16px;
+  margin: 64px auto;
 
-a:hover:not(.MuiLink-root) {
-  text-decoration: underline;
+  .container__content {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
 }

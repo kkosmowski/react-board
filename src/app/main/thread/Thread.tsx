@@ -32,17 +32,8 @@ export function Thread(): ReactElement {
   }, [posts]);
 
   return (
-    <Posts>
+    <div className="container">
       { postCollection }
-    </Posts>
+    </div>
   );
 }
-
-const Posts = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 16px;
-  margin: 64px auto;
-`;

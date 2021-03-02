@@ -9,8 +9,8 @@ import React from 'react';
 
 function App(): ReactElement {
   return (
-    <DataProvider>
-      <SessionProvider>
+    <SessionProvider>
+      <DataProvider>
         <MuiThemeProvider theme={ theme }>
           <ThemeProvider theme={ theme }>
             <AppWrapper>
@@ -28,8 +28,8 @@ function App(): ReactElement {
             </AppWrapper>
           </ThemeProvider>
         </MuiThemeProvider>
-      </SessionProvider>
-    </DataProvider>
+      </DataProvider>
+    </SessionProvider>
   );
 }
 

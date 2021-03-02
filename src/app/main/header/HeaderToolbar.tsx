@@ -1,14 +1,13 @@
 import { AppBar, IconButton, Link, Toolbar, Typography } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import { ReactElement, useContext } from 'react';
-import { DataContext, SessionContext } from '@contexts';
+import { SessionContext } from '@contexts';
 import styled from 'styled-components';
 import { HeaderLoginLink } from './HeaderLoginLink';
 import { LoggedUser } from './LoggedUser';
 
 export function HeaderToolbar(): ReactElement {
-  const { logged } = useContext(SessionContext);
-  const { user } = useContext(DataContext);
+  const { logged, user } = useContext(SessionContext);
 
   return (
     <AppBar>

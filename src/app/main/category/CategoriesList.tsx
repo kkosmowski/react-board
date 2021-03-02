@@ -1,4 +1,4 @@
-import { ReactElement, useContext, useEffect, useState } from 'react';
+import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import { CategoryListItemModel } from '@models';
 import { CategoryListItem } from './CategoryListItem';
 import { DataContext } from '@contexts';
@@ -25,16 +25,7 @@ export function CategoriesList(): ReactElement {
   }, [categories]);
 
   return (
-    <List>
+    <div className="container">
       { categoriesList }
-    </List>);
+    </div>);
 }
-
-const List = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 16px;
-  margin: 64px auto;
-`;

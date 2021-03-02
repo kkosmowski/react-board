@@ -13,7 +13,7 @@ export function CategoryListItem({ category }: CategoryListItemProps): ReactElem
 
   return (
     <CategoryCard>
-      <CategoryCardContent>
+      <CardContent className="container__content">
         <CategoryRow>
           <CategoryLink to={ match.url + '/category/' + category.id }>
             <Typography component="h5" variant="h5">
@@ -35,20 +35,13 @@ export function CategoryListItem({ category }: CategoryListItemProps): ReactElem
             ostatni post hehe
           </CategoryCardDetails>
         </CategoryRow>
-      </CategoryCardContent>
+      </CardContent>
     </CategoryCard>
   );
 }
 
 const CategoryCard = styled(Card)`
   margin-bottom: 32px;
-`;
-
-const CategoryCardContent = styled(CardContent)`
-  && {
-    padding-left: 24px;
-    padding-right: 24px;
-  }
 `;
 
 const CategoryLink = styled(RouterLink)`

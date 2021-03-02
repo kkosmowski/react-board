@@ -38,7 +38,7 @@ export function Category(): ReactElement {
   }, [threads]);
 
   return (
-    <CategoryCard>
+    <CategoryCard className="container">
       <CardContent>
         <Typography component="h5" variant="h5">{ category.name }</Typography>
       </CardContent>
@@ -50,13 +50,6 @@ export function Category(): ReactElement {
 }
 
 const CategoryCard = styled(Card)`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 16px;
-  margin: 64px auto;
-
   && {
     overflow: visible;
   }

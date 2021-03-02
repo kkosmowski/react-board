@@ -10,6 +10,7 @@ const aliasMap = {
   '@main/category': 'src/app/main/category',
   '@main/footer': 'src/app/main/footer',
   '@main/header': 'src/app/main/header',
+  '@main/profile': 'src/app/main/profile',
   '@main/thread': 'src/app/main/thread',
   '@models': 'src/app/domain/models',
   '@responses': 'src/app/domain/responses',

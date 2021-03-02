@@ -16,7 +16,12 @@ export function Post({ post }: PostProps): ReactElement {
       <PostCardContent>
         <PostDetails>
           <address>
-            <RouterLink rel="author" to={ `/users/${ post.created_by.id }/` }>{ post.created_by.username }</RouterLink>
+            <RouterLink
+              rel="author"
+              to={ `/home/users/${ post.created_by.id }/` }
+            >
+              { post.created_by.username }
+            </RouterLink>
           </address>
           <time dateTime={ post.created_on }>{ TimeUtil.format(post.created_on, DateFormat.DateWithTime) }</time>
         </PostDetails>
