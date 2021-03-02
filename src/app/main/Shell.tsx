@@ -1,6 +1,7 @@
 import { Header } from '@main/header';
 import { CategoriesList, Category } from '@main/category';
 import { Route, useRouteMatch } from 'react-router-dom';
+import { Thread } from '@main/thread';
 
 export function Shell() {
   const match = useRouteMatch();
@@ -9,7 +10,8 @@ export function Shell() {
     <>
       <Header />
       <Route path={ match.url } component={ CategoriesList } exact />
-      <Route path={ match.url + '/category/:categoryId' } component={ Category } />
+      <Route path={ match.url + '/category/:categoryId' } component={ Category } exact />
+      <Route path={ match.url + '/category/:categoryId/thread/:threadId' } component={ Thread } exact />
     </>
   );
 }

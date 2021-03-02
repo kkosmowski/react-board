@@ -25,10 +25,10 @@ a {
   font: inherit;
 }
 
-a:link {
+a:link:not(.MuiLink-root) {
   text-decoration: none;
 }
 
-a:hover {
+a:hover:not(.MuiLink-root) {
   text-decoration: underline;
 }

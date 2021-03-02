@@ -1,4 +1,4 @@
-import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, IconButton, Link, Toolbar, Typography } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import { ReactElement, useContext } from 'react';
 import { DataContext, SessionContext } from '@contexts';
@@ -21,7 +21,9 @@ export function HeaderToolbar(): ReactElement {
             <Menu />
           </IconButton>
 
-          <Typography component="h1" variant="h6">React Board</Typography>
+          <Typography component="h1" variant="h6">
+            <Link href="/home" color="initial" underline="none">React Board</Link>
+          </Typography>
         </ToolbarPart>
         <ToolbarPart data-right>
           { logged

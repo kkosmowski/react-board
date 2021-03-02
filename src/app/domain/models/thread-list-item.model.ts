@@ -1,5 +1,5 @@
 import { Author } from './author.model';
-import { Post } from './post.model';
+import { PostModel } from './post.model';
 
 export interface ThreadListItemModel {
   id: string;
@@ -9,7 +9,7 @@ export interface ThreadListItemModel {
   create_on: Date;
   pinned: boolean;
   post_count: number;
-  last_post: Post;
+  last_post: PostModel;
 }
 
 

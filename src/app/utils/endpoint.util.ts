@@ -9,7 +9,7 @@ interface Endpoint {
 }
 
 interface EndpointWithProp {
-  [key: string]: (prop: any) => string;
+  [key: string]: (prop1: any, prop2?: any) => string;
 }
 
 export const endpoint: Endpoint = {
@@ -19,6 +19,7 @@ export const endpoint: Endpoint = {
 };
 
 export const endpointWithProp: EndpointWithProp = {
-  category: (categoryId: string) => endpointFactory(`categories/${categoryId}`),
-  threads: (categoryId: string) => endpointFactory(`categories/${categoryId}/threads`)
-}
+  category: (categoryId: string) => endpointFactory(`categories/${ categoryId }`),
+  threads: (categoryId: string) => endpointFactory(`categories/${ categoryId }/threads`),
+  posts: (categoryId: string, threadId: string) => endpointFactory(`categories/${ categoryId }/threads/${ threadId }/posts`)
+};

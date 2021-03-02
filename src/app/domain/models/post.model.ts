@@ -1,7 +1,7 @@
 import { Author } from './author.model';
 
-export interface Post {
+export interface PostModel {
   created_by: Author;
-  create_on: Date;
+  created_on: string;
   body: string;
 }
