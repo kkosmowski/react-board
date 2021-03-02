@@ -1,17 +1,28 @@
 import { Header } from '@main/header';
 import { CategoriesList, Category } from '@main/category';
-import { Route, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { Thread } from '@main/thread';
 
 export function Shell() {
-  const match = useRouteMatch();
+  const { url } = useRouteMatch();
 
   return (
     <>
       <Header />
-      <Route path={ match.url } component={ CategoriesList } exact />
-      <Route path={ match.url + '/category/:categoryId' } component={ Category } exact />
-      <Route path={ match.url + '/category/:categoryId/thread/:threadId' } component={ Thread } exact />
+      <Switch>
+        <Route exact path={ url }>
+          <CategoriesList />
+        </Route>
+        <Route exact path={ `${ url }/category/:categoryId` }>
+          <Category />
+        </Route>
+        <Route exact path={ `${ url }/category/:categoryId/thread/:threadId` }>
+          <Thread />
+        </Route>
+        <Route path="*">
+          <Redirect to="/home" />
+        </Route>
+      </Switch>
     </>
   );
 }

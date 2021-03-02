@@ -39,7 +39,7 @@ const PostCardContent = styled(CardContent)`
   }
 `;
 
-const PostDetails = styled.p`
+const PostDetails = styled.div`
   margin-bottom: 16px;
 
   address {

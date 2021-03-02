@@ -15,9 +15,13 @@ function App(): ReactElement {
           <ThemeProvider theme={ theme }>
             <AppWrapper>
               <BrowserRouter>
-                <Route path="/auth" component={ Auth } />
-                <Route path="/home" component={ Shell } />
-                <Route path="*">
+                <Route path="/home">
+                  <Shell />
+                </Route>
+                <Route path="/auth">
+                  <Auth />
+                </Route>
+                <Route exact path="/">
                   <Redirect to="/home" />
                 </Route>
               </BrowserRouter>
