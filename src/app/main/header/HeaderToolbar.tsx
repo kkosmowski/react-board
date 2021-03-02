@@ -4,6 +4,7 @@ import { ReactElement, useContext } from 'react';
 import { DataContext, SessionContext } from '@contexts';
 import styled from 'styled-components';
 import { HeaderLoginLink } from './HeaderLoginLink';
+import { LoggedUser } from './LoggedUser';
 
 export function HeaderToolbar(): ReactElement {
   const { logged } = useContext(SessionContext);
@@ -27,7 +28,7 @@ export function HeaderToolbar(): ReactElement {
         </ToolbarPart>
         <ToolbarPart data-right>
           { logged
-            ? <LoggedUser>{ user.username }</LoggedUser>
+            ? <LoggedUser user={ user } />
             : <HeaderLoginLink />
           }
         </ToolbarPart>
@@ -45,9 +46,4 @@ const ToolbarPart = styled.div`
     justify-content: flex-end;
     color: ${ props => props.theme.palette.secondary.main };
   }
-`;
-
-const LoggedUser = styled.span`
-  font-size: 15px;
-  color: ${ props => props.theme.palette.secondary.main };
 `;

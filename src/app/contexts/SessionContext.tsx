@@ -1,10 +1,8 @@
-import Cookies from 'js-cookie';
 import { createContext, ReactElement, useContext, useEffect, useState } from 'react';
 import { LoginForm, Session } from '@interfaces';
 import { endpoint, SessionUtil } from '@utils';
 import { HttpService } from '@services';
 import { LoginResponse, MeResponse } from '@responses';
-import { SessionKey } from '@enums';
 import { DataContext } from './DataContext';
 
 interface SessionProviderProps {
@@ -14,7 +12,8 @@ interface SessionProviderProps {
 interface SessionContextProps {
   logged: boolean | null;
   session: Session;
-  createSession: (form: LoginForm) => void;
+  createSession: (form: LoginForm) => Promise<void>;
+  logout: () => void;
 }
 
 const initialSession = {
@@ -30,7 +29,8 @@ const SessionContext = createContext<SessionContextProps>({
     token: '',
     persisted: false,
   },
-  createSession: (form: LoginForm) => ({})
+  createSession: (form: LoginForm) => Promise.resolve(),
+  logout: () => ({})
 });
 
 const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
@@ -43,14 +43,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
   useEffect(() => {
     if (session.token && session.username) {
       setLogged(true);
-
-      if (session.persisted) {
-        Cookies.set(SessionKey.Token, session.token);
-        Cookies.set(SessionKey.Username, session.username);
-      } else {
-        sessionStorage.setItem(SessionKey.Token, session.token);
-        sessionStorage.setItem(SessionKey.Username, session.username);
-      }
+      SessionUtil.setSession(session);
     } else {
       const existingSession: Session | null = SessionUtil.checkIfSessionExists();
 
@@ -88,10 +81,16 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
       });
   };
 
+   const logout = (): void => {
+     setLogged(false);
+     SessionUtil.clearSession(session.persisted);
+   }
+
   return (
     <Provider value={ {
       logged, session,
       createSession,
+      logout,
     } as SessionContextProps }>
       { children }
     </Provider>

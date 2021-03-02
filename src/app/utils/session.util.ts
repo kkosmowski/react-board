@@ -25,4 +25,24 @@ export class SessionUtil {
       return null;
     }
   }
+
+  static setSession(session: Session): void {
+    if (session.persisted) {
+      Cookies.set(SessionKey.Token, session.token);
+      Cookies.set(SessionKey.Username, session.username);
+    } else {
+      sessionStorage.setItem(SessionKey.Token, session.token);
+      sessionStorage.setItem(SessionKey.Username, session.username);
+    }
+  }
+
+  static clearSession(persisted: boolean): void {
+    if (persisted) {
+      Cookies.remove(SessionKey.Token);
+      Cookies.remove(SessionKey.Username);
+    } else {
+      sessionStorage.removeItem(SessionKey.Token);
+      sessionStorage.removeItem(SessionKey.Username);
+    }
+  }
 }
