@@ -20,6 +20,10 @@ body,
   color: #ddd;
 }
 
+#root {
+  overflow: hidden;
+}
+
 a {
   color: inherit;
   font: inherit;
