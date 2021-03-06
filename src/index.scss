@@ -24,6 +24,12 @@ body,
   overflow: hidden;
 }
 
+main.board {
+  overflow: auto;
+  margin-top: 64px;
+  scroll-behavior: smooth;
+}
+
 a {
   color: inherit;
   font: inherit;
@@ -37,13 +43,17 @@ a {
   }
 }
 
+.header__logo + .container {
+  margin-top: 64px;
+}
+
 .container {
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 1200px;
   padding: 0 16px;
-  margin: 64px auto;
+  margin: 0 auto 64px;
 
   .container__content {
     padding-left: 24px;

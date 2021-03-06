@@ -1,8 +1,9 @@
-import { CategoryListItemModel, CategoryModel, PostModel, ThreadListItemModel, User } from '@models';
-import { createContext, ReactElement, useContext, useEffect, useState } from 'react';
+import { CategoryListItemModel, CategoryModel, PostModel, ThreadListItemModel } from '@models';
+import { createContext, ReactElement, useContext, useState } from 'react';
 import { HttpService } from '@services';
 import { endpoint, endpointWithProp } from '@utils';
 import { SessionContext } from './SessionContext';
+import { ThreadId } from '@interfaces';
 
 interface DataProviderProps {
   children: ReactElement | ReactElement[];
@@ -16,6 +17,9 @@ interface DataContextProps {
   threads: ThreadListItemModel[];
   posts: PostModel[];
   getPosts: (categoryId: string, threadId: string) => void;
+  mainElement: HTMLElement | null;
+  setMainElement: (element: HTMLElement | null) => HTMLElement | null;
+  addReply: (replyBody: string) => void;
 }
 
 const DataProvider = ({ children }: DataProviderProps): ReactElement => {
@@ -26,10 +30,8 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
   const [category, setCategory] = useState<CategoryModel>(initialCategory);
   const [threads, setThreads] = useState<ThreadListItemModel[]>([]);
   const [posts, setPosts] = useState<PostModel[]>([]);
-
-  useEffect(() => {
-    console.log('session DC', session);
-  }, [session]);
+  const [mainElement, setMainElement] = useState<HTMLElement | null>(null);
+  const [threadId, setThreadId] = useState<ThreadId>({ thread: '', category: '' });
 
   const mapResponseCollectionToCollection = <T extends { id: string, url: string }>(responseCollection: Partial<T>[]): T[] =>
     responseCollection.map((response) => {
@@ -64,6 +66,10 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       .then((threads: Partial<ThreadListItemModel>[]) => mapResponseCollectionToCollection<ThreadListItemModel>(threads))
       .then((threads: ThreadListItemModel[]) => {
         setThreads(threads);
+        setThreadId({
+          category: '',
+          thread: '',
+        });
       });
   };
 
@@ -73,6 +79,10 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       .then(mapPostResponseCollectionToPostModelCollection)
       .then((posts: PostModel[]) => {
         setPosts(posts);
+        setThreadId({
+          category: categoryId,
+          thread: threadId,
+        });
       });
   };
 
@@ -91,11 +101,31 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       return post as PostModel;
     });
 
+  const addReply = (replyBody: string): void => {
+    console.log(threadId);
+    if (threadId.thread && threadId.category) {
+      HttpService
+        .post(
+          endpointWithProp.posts(threadId.category, threadId.thread),
+          { body: replyBody },
+          session.token
+        )
+        .then((newPost: PostModel) => {
+          setPosts([
+            ...posts,
+            newPost
+          ]);
+        });
+    }
+  };
+
   return (
     <Provider value={ {
       categories, getCategories,
       category, getCategory, threads,
       posts, getPosts,
+      mainElement, setMainElement,
+      addReply,
     } as DataContextProps }>
       { children }
     </Provider>
@@ -115,6 +145,9 @@ const initialData: DataContextProps = {
   threads: [],
   posts: [],
   getPosts: (categoryId: string, threadId: string) => ({}),
+  mainElement: null,
+  setMainElement: (element: HTMLElement | null) => element,
+  addReply: (replyBody: string) => ({})
 };
 
 const DataContext = createContext<DataContextProps>(initialData);

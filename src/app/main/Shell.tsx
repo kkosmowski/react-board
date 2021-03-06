@@ -3,12 +3,20 @@ import { CategoriesList, Category } from '@main/category';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { Thread } from '@main/thread';
 import { Profile } from '@main/profile';
+import { useContext, useEffect, useRef } from 'react';
+import { DataContext } from '@contexts';
 
 export function Shell() {
   const { url } = useRouteMatch();
+  const { setMainElement } = useContext(DataContext);
+  const mainElement = useRef(null);
+
+  useEffect(() => {
+    setMainElement(mainElement.current);
+  }, [mainElement.current]);
 
   return (
-    <>
+    <main className="board" ref={ mainElement }>
       <Header />
       <Switch>
         <Route exact path={ url }>
@@ -27,6 +35,6 @@ export function Shell() {
           <Redirect to="/home" />
         </Route>
       </Switch>
-    </>
+    </main>
   );
 }

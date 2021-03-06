@@ -47,7 +47,6 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
         setLogged(false);
       }
     }
-    console.log('session', session);
   }, [session]);
 
   useEffect(() => {
