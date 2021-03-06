@@ -17,9 +17,11 @@ interface DataContextProps {
   threads: ThreadListItemModel[];
   posts: PostModel[];
   getPosts: (categoryId: string, threadId: string) => void;
+  thread: ThreadListItemModel;
+  getThread: (threadId: string) => void;
   mainElement: HTMLElement | null;
   setMainElement: (element: HTMLElement | null) => HTMLElement | null;
-  addReply: (replyBody: string) => void;
+  addReply: (replyBody: string) => Promise<any>;
 }
 
 const DataProvider = ({ children }: DataProviderProps): ReactElement => {
@@ -29,6 +31,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
   const [categories, setCategories] = useState<CategoryListItemModel[]>([]);
   const [category, setCategory] = useState<CategoryModel>(initialCategory);
   const [threads, setThreads] = useState<ThreadListItemModel[]>([]);
+  const [thread, setThread] = useState<ThreadListItemModel>(initialThread);
   const [posts, setPosts] = useState<PostModel[]>([]);
   const [mainElement, setMainElement] = useState<HTMLElement | null>(null);
   const [threadId, setThreadId] = useState<ThreadId>({ thread: '', category: '' });
@@ -86,6 +89,10 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       });
   };
 
+  const getThread = (threadId: string): void => {
+    setThread(threads.find((thread) => thread.id === threadId) as ThreadListItemModel);
+  };
+
   const mapPostResponseCollectionToPostModelCollection = (posts: Partial<PostModel>[]): PostModel[] =>
     posts.map((post: Partial<PostModel>) => {
       if (post.created_by && post.created_by.url) {
@@ -101,10 +108,9 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       return post as PostModel;
     });
 
-  const addReply = (replyBody: string): void => {
-    console.log(threadId);
+  const addReply = (replyBody: string): Promise<any> => {
     if (threadId.thread && threadId.category) {
-      HttpService
+      return HttpService
         .post(
           endpointWithProp.posts(threadId.category, threadId.thread),
           { body: replyBody },
@@ -117,6 +123,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
           ]);
         });
     }
+    return Promise.resolve();
   };
 
   return (
@@ -124,6 +131,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       categories, getCategories,
       category, getCategory, threads,
       posts, getPosts,
+      thread, getThread,
       mainElement, setMainElement,
       addReply,
     } as DataContextProps }>
@@ -137,6 +145,29 @@ const initialCategory: CategoryModel = {
   name: '',
 };
 
+const initialThread: ThreadListItemModel = {
+  id: '',
+  url: '',
+  name: '',
+  created_by: {
+    id: '',
+    url: '',
+    username: '',
+  },
+  created_on: '',
+  pinned: false,
+  post_count: NaN,
+  last_post: {
+    created_by: {
+      id: '',
+      url: '',
+      username: '',
+    },
+    created_on: '',
+    body: '',
+  },
+};
+
 const initialData: DataContextProps = {
   categories: [],
   getCategories: () => ({}),
@@ -145,9 +176,11 @@ const initialData: DataContextProps = {
   threads: [],
   posts: [],
   getPosts: (categoryId: string, threadId: string) => ({}),
+  thread: initialThread,
+  getThread: (threadId: string) => ({}),
   mainElement: null,
   setMainElement: (element: HTMLElement | null) => element,
-  addReply: (replyBody: string) => ({})
+  addReply: (replyBody: string) => Promise.resolve()
 };
 
 const DataContext = createContext<DataContextProps>(initialData);

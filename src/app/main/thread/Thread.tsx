@@ -3,7 +3,7 @@ import { DataContext } from '@contexts';
 import { useParams } from 'react-router-dom';
 import { PostModel } from '@models';
 import { Post } from './Post';
-import { Button } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
 import './Thread.scss';
 import { ThreadReply } from './ThreadReply';
 
@@ -14,12 +14,18 @@ interface ThreadRouteParams {
 
 export function Thread(): ReactElement {
   const { categoryId, threadId }: ThreadRouteParams = useParams();
-  const { addReply, getPosts, mainElement, posts } = useContext(DataContext);
+  const { addReply, getPosts, mainElement, posts, thread, getThread } = useContext(DataContext);
   const [postCollection, setPostCollection] = useState<ReactElement[]>([]);
   const [replyVisible, setReplyVisible] = useState(false);
 
   useEffect(() => {
-    getPosts(categoryId, threadId);
+    if (threadId) {
+      getThread(threadId);
+
+      if (categoryId) {
+        getPosts(categoryId, threadId);
+      }
+    }
   }, [categoryId, threadId]);
 
   useEffect(() => {
@@ -60,6 +66,9 @@ export function Thread(): ReactElement {
   return (
     <div className="thread container">
       <header className="thread__header">
+        <hgroup className="thread__details">
+          <Typography variant="h4" component="h4">Thread: { thread?.name }</Typography>
+        </hgroup>
         <hgroup className="thread__controls">
           { createReplyButton() }
         </hgroup>

@@ -6,7 +6,7 @@ export interface ThreadListItemModel {
   url: string;
   name: string;
   created_by: Author;
-  create_on: Date;
+  created_on: string;
   pinned: boolean;
   post_count: number;
   last_post: PostModel;

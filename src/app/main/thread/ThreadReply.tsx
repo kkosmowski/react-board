@@ -1,16 +1,28 @@
 import { Button, Card, CardContent, TextField } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
 
 interface ThreadReplyProps {
-  onAddReply: (replyBody: string) => void
+  onAddReply: (replyBody: string) => Promise<any>
 }
 
 export function ThreadReply({ onAddReply }: ThreadReplyProps): ReactElement {
   const [replyBody, setReplyBody] = useState('');
+  const [replyError, setReplyError] = useState(' ');
   const handleAddReply = () => {
-    onAddReply(replyBody);
+    if (replyBody.trim()) {
+      onAddReply(replyBody).then(() => {
+        setReplyBody(' ');
+      });
+    } else {
+      setReplyError('Post content cannot be empty.');
+    }
+  };
+
+  const handleReplyChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setReplyBody(event.target.value);
+    setReplyError(' ');
   };
 
   return (
@@ -18,7 +30,7 @@ export function ThreadReply({ onAddReply }: ThreadReplyProps): ReactElement {
       <CardContent className="container__content">
         <TextField
           value={ replyBody }
-          onChange={ (event) => setReplyBody(event.target.value) }
+          onChange={ handleReplyChange }
           id="standard-multiline-static"
           label="Reply"
           multiline
@@ -27,6 +39,8 @@ export function ThreadReply({ onAddReply }: ThreadReplyProps): ReactElement {
           variant="filled"
           fullWidth
           autoFocus
+          helperText={ replyError }
+          error={ !!replyError.trim() }
         />
         <AddPostButton
           onClick={ handleAddReply }
