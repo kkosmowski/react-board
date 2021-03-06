@@ -9,11 +9,13 @@ interface ProfileRouteParams {
 
 export function Profile(): ReactElement {
   const { userId }: ProfileRouteParams = useParams();
-  const { user, getUser } = useContext(SessionContext);
+  const { user, getUser, logged } = useContext(SessionContext);
 
   useEffect(() => {
-    getUser(userId);
-  }, [userId]);
+    if (logged) {
+      getUser(userId);
+    }
+  }, [userId, logged]);
 
   return (
     <Card className="container">

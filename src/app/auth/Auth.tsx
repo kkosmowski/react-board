@@ -1,12 +1,24 @@
 import styled from 'styled-components';
 import { LoginPanel } from './LoginPanel';
+import { useContext } from 'react';
+import { SessionContext } from '@contexts';
+import { Redirect } from 'react-router';
+import { LoginForm } from '@interfaces';
 
 export function Auth() {
-  return (
-    <AuthWrapper>
-      <LoginPanel />
-    </AuthWrapper>
-  );
+  const { logged, createSession } = useContext(SessionContext);
+
+  const handleLogin = (form: LoginForm) => {
+    createSession(form);
+  };
+
+  return logged
+    ? <Redirect to="/home" />
+    : (
+      <AuthWrapper>
+        <LoginPanel onLogin={ handleLogin } />
+      </AuthWrapper>
+    );
 }
 
 const AuthWrapper = styled.div`

@@ -7,7 +7,7 @@ import { HeaderLoginLink } from './HeaderLoginLink';
 import { LoggedUser } from './LoggedUser';
 
 export function HeaderToolbar(): ReactElement {
-  const { logged, user } = useContext(SessionContext);
+  const { logged, currentUser, logout } = useContext(SessionContext);
 
   return (
     <AppBar>
@@ -27,7 +27,7 @@ export function HeaderToolbar(): ReactElement {
         </ToolbarPart>
         <ToolbarPart data-right>
           { logged
-            ? <LoggedUser user={ user } />
+            ? <LoggedUser user={ currentUser } onLogout={ logout } />
             : <HeaderLoginLink />
           }
         </ToolbarPart>

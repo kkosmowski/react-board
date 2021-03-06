@@ -1,17 +1,16 @@
 import { User } from '@models';
-import { ReactElement, MouseEvent, useState, useContext } from 'react';
+import { ReactElement, MouseEvent, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Menu, MenuItem } from '@material-ui/core';
-import { SessionContext } from '@contexts';
 import styled from 'styled-components';
 
 interface LoggedUserProps {
   user: User;
+  onLogout: () => void;
 }
 
-export function LoggedUser({ user }: LoggedUserProps): ReactElement {
+export function LoggedUser({ user, onLogout }: LoggedUserProps): ReactElement {
   const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
-  const { logout } = useContext(SessionContext);
   const history = useHistory();
 
   const openMenu = (event: MouseEvent<HTMLButtonElement>) => {
@@ -38,7 +37,7 @@ export function LoggedUser({ user }: LoggedUserProps): ReactElement {
         onClose={ hideMenu }
       >
         <MenuItem onClick={ redirectToProfile }>Profile</MenuItem>
-        <MenuItem onClick={ logout }>Logout</MenuItem>
+        <MenuItem onClick={ onLogout }>Logout</MenuItem>
       </Menu>
     </>
   );

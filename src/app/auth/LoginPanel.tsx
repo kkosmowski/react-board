@@ -13,12 +13,13 @@ import {
 } from '@material-ui/core';
 import styled from 'styled-components';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { SessionContext } from '@contexts';
-import { Redirect } from 'react-router';
 import { LoginForm } from '@interfaces';
 
-export function LoginPanel(): ReactElement {
-  const { logged, createSession } = useContext(SessionContext);
+interface LoginPanelProps {
+  onLogin: (form: LoginForm) => void;
+}
+
+export function LoginPanel({ onLogin }: LoginPanelProps): ReactElement {
   const [form, setForm] = useState<LoginForm>({
     username: '',
     password: '',
@@ -49,12 +50,10 @@ export function LoginPanel(): ReactElement {
 
   const handleLogin = (event: FormEvent) => {
     event.preventDefault();
-    createSession(form);
-  };
+    onLogin(form);
+  }
 
-  return logged
-    ? <Redirect to="/home" />
-    : (
+  return (
       <form onSubmit={ handleLogin }>
         <AuthCard>
           <AuthCardContent>
