@@ -6,6 +6,7 @@ import { Profile } from '@main/profile';
 import { useContext, useEffect, useRef } from 'react';
 import { DataContext } from '@contexts';
 import { AppBreadcrumbs } from './AppBreadcrumbs';
+import { RouteForLogged } from './RouteForLogged';
 
 export function Shell() {
   const { url } = useRouteMatch();
@@ -30,12 +31,12 @@ export function Shell() {
         <Route exact path={ `${ url }/category/:categoryId/thread/:threadId` }>
           <Thread />
         </Route>
-        <Route path={ `${ url }/users/:userId` }>
+        <RouteForLogged path={ `${ url }/users/:userId` }>
           <Profile />
-        </Route>
-        <Route path={ `${ url }/category/:categoryId/create-thread` }>
+        </RouteForLogged>
+        <RouteForLogged path={ `${ url }/category/:categoryId/create-thread` }>
           <CreateThread />
-        </Route>
+        </RouteForLogged>
         <Route path="*">
           <Redirect to="/home" />
         </Route>
