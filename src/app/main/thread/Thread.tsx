@@ -17,6 +17,7 @@ export function Thread(): ReactElement {
   const { addReply, getPosts, mainElement, posts, thread, getThread } = useContext(DataContext);
   const [postCollection, setPostCollection] = useState<ReactElement[]>([]);
   const [replyVisible, setReplyVisible] = useState(false);
+  const [threadScrollable, setThreadScrollable] = useState(false);
 
   useEffect(() => {
     if (threadId) {
@@ -38,14 +39,15 @@ export function Thread(): ReactElement {
     });
 
     setPostCollection(collection);
+    setTimeout(() => {
+      setThreadScrollable(mainElement.current.scrollHeight > window.innerHeight);
+    }, 0);
   }, [posts]);
 
   const handleReplyClick = () => {
     setReplyVisible(true);
     setTimeout(() => {
-      if (mainElement) {
-        mainElement.scrollTo(0, mainElement.scrollHeight);
-      }
+      mainElement.current.scrollTo(0, mainElement.current.scrollHeight);
     }, 0);
   };
 
@@ -76,7 +78,9 @@ export function Thread(): ReactElement {
       { postCollection }
       { replyVisible
         ? <ThreadReply onAddReply={ addReply } />
-        : createReplyButton()
+        : threadScrollable
+          ? createReplyButton()
+          : null
       }
     </div>
   );

@@ -9,11 +9,11 @@ import { DataContext } from '@contexts';
 export function Shell() {
   const { url } = useRouteMatch();
   const { setMainElement } = useContext(DataContext);
-  const mainElement = useRef(null);
+  const mainElement = useRef(document.body);
 
   useEffect(() => {
-    setMainElement(mainElement.current);
-  }, [mainElement.current]);
+    setMainElement(mainElement);
+  }, [mainElement, mainElement.current]);
 
   return (
     <main className="board" ref={ mainElement }>

@@ -3,6 +3,7 @@ import { ThreadListItemModel } from '@models';
 import { DataContext } from '@contexts';
 import { useParams } from 'react-router-dom';
 import {
+  Button,
   Card,
   CardContent,
   List,
@@ -37,11 +38,25 @@ export function Category(): ReactElement {
     setThreadCollection(collection);
   }, [threads]);
 
+  const handleNewThread = () => {
+    console.log('new thread');
+  };
+
   return (
     <CategoryCard className="container">
-      <CardContent>
+      <CategoryContent>
         <Typography component="h5" variant="h5">{ category.name }</Typography>
-      </CardContent>
+
+        <Button
+          type="button"
+          title="New thread"
+          color="secondary"
+          variant="contained"
+          onClick={ handleNewThread }
+        >
+          New thread
+        </Button>
+      </CategoryContent>
       <List>
         { threadCollection }
       </List>
@@ -53,4 +68,10 @@ const CategoryCard = styled(Card)`
   && {
     overflow: visible;
   }
+`;
+
+const CategoryContent = styled(CardContent)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;

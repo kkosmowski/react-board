@@ -1,5 +1,5 @@
 import { CategoryListItemModel, CategoryModel, PostModel, ThreadListItemModel } from '@models';
-import { createContext, ReactElement, useContext, useState } from 'react';
+import { createContext, MutableRefObject, ReactElement, useContext, useRef, useState } from 'react';
 import { HttpService } from '@services';
 import { endpoint, endpointWithProp } from '@utils';
 import { SessionContext } from './SessionContext';
@@ -19,8 +19,8 @@ interface DataContextProps {
   getPosts: (categoryId: string, threadId: string) => void;
   thread: ThreadListItemModel;
   getThread: (threadId: string) => void;
-  mainElement: HTMLElement | null;
-  setMainElement: (element: HTMLElement | null) => HTMLElement | null;
+  mainElement: MutableRefObject<HTMLElement>;
+  setMainElement: (element: MutableRefObject<HTMLElement>) => MutableRefObject<HTMLElement>;
   addReply: (replyBody: string) => Promise<any>;
 }
 
@@ -33,7 +33,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
   const [threads, setThreads] = useState<ThreadListItemModel[]>([]);
   const [thread, setThread] = useState<ThreadListItemModel>(initialThread);
   const [posts, setPosts] = useState<PostModel[]>([]);
-  const [mainElement, setMainElement] = useState<HTMLElement | null>(null);
+  const [mainElement, setMainElement] = useState<MutableRefObject<HTMLElement>>(useRef(document.body));
   const [threadId, setThreadId] = useState<ThreadId>({ thread: '', category: '' });
 
   const mapResponseCollectionToCollection = <T extends { id: string, url: string }>(responseCollection: Partial<T>[]): T[] =>
@@ -178,8 +178,8 @@ const initialData: DataContextProps = {
   getPosts: (categoryId: string, threadId: string) => ({}),
   thread: initialThread,
   getThread: (threadId: string) => ({}),
-  mainElement: null,
-  setMainElement: (element: HTMLElement | null) => element,
+  mainElement: {} as MutableRefObject<HTMLElement>,
+  setMainElement: (element: MutableRefObject<HTMLElement>) => element,
   addReply: (replyBody: string) => Promise.resolve()
 };
 
