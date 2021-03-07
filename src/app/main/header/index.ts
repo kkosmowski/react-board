@@ -1,4 +1,4 @@
 export * from './Header';
 export * from './HeaderLogo';
 export * from './HeaderToolbar';
-export * from './HeaderLoginLink';
+export * from './HeaderLoginLinks';

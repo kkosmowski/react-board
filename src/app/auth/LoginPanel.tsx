@@ -1,7 +1,5 @@
 import { ChangeEvent, FormEvent, ReactElement, useState } from 'react';
 import {
-  Card,
-  CardContent,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -9,11 +7,12 @@ import {
   Input,
   InputAdornment,
   InputLabel,
-  Typography, FormHelperText, Button, CardActions
+  Typography, FormHelperText, Button,
 } from '@material-ui/core';
 import styled from 'styled-components';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { LoginForm } from '@interfaces';
+import { AuthPanel } from './AuthPanel';
 
 interface LoginPanelProps {
   onLogin: (form: LoginForm) => void;
@@ -55,15 +54,14 @@ export function LoginPanel({ onLogin }: LoginPanelProps): ReactElement {
 
   return (
     <form onSubmit={ handleLogin }>
-      <AuthCard>
-        <AuthCardContent>
+      <AuthPanel>
+        <>
           <Typography variant="h6" component="span">Login</Typography>
 
-
           <FormControl>
-            <InputLabel htmlFor="login-username">Email</InputLabel>
+            <InputLabel htmlFor="login-email">Email</InputLabel>
             <Input
-              id="login-username"
+              id="login-email"
               value={ form.username }
               onChange={ handleChange('username') }
             />
@@ -97,10 +95,9 @@ export function LoginPanel({ onLogin }: LoginPanelProps): ReactElement {
             label="Remember me"
             labelPlacement="end"
           />
-        </AuthCardContent>
-        <AuthCardActions>
+        </>
+        <>
           <Button
-            onClick={ handleLogin }
             type="submit"
             variant="contained"
             color="primary"
@@ -109,35 +106,11 @@ export function LoginPanel({ onLogin }: LoginPanelProps): ReactElement {
             Login
           </Button>
           <GrayButton variant="contained" fullWidth>Go back</GrayButton>
-        </AuthCardActions>
-      </AuthCard>
+        </>
+      </AuthPanel>
     </form>
   );
 }
-
-const AuthCard = styled(Card)`
-  width: 320px;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-`;
-
-const AuthCardContent = styled(CardContent)`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`;
-
-const AuthCardActions = styled(CardActions)`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  && > :not(:first-child) {
-    margin-left: 0;
-    margin-top: 8px;
-  }
-`;
 
 const GrayButton = styled(Button)`
   && {

@@ -2,12 +2,14 @@ import styled from 'styled-components';
 import { LoginPanel } from './LoginPanel';
 import { useContext, useEffect } from 'react';
 import { SessionContext } from '@contexts';
-import { LoginForm } from '@interfaces';
-import { useHistory } from 'react-router-dom';
+import { LoginForm, RegisterForm } from '@interfaces';
+import { Route, useHistory, useRouteMatch } from 'react-router-dom';
+import { RegisterPanel } from './RegisterPanel';
 
 export function Auth() {
   const history = useHistory();
-  const { logged, createSession } = useContext(SessionContext);
+  const { url } = useRouteMatch();
+  const { logged, createSession, createAccount } = useContext(SessionContext);
 
   useEffect(() => {
     if (logged) {
@@ -21,9 +23,21 @@ export function Auth() {
     });
   };
 
+  const handleRegister = (form: RegisterForm): void => {
+    createAccount(form).then(() => {
+      history.push('/home');
+      // TODO: Add something more after registration is successful
+    });
+  };
+
   return (
     <AuthWrapper>
-      <LoginPanel onLogin={ handleLogin } />
+      <Route path={ `${ url }/login` }>
+        <LoginPanel onLogin={ handleLogin } />
+      </Route>
+      <Route path={ `${ url }/register` }>
+        <RegisterPanel onRegister={ handleRegister } />
+      </Route>
     </AuthWrapper>
   );
 }

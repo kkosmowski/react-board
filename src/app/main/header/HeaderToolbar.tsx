@@ -3,7 +3,7 @@ import { Menu } from '@material-ui/icons';
 import { ReactElement, useContext } from 'react';
 import { SessionContext } from '@contexts';
 import styled from 'styled-components';
-import { HeaderLoginLink } from './HeaderLoginLink';
+import { HeaderLoginLinks } from './HeaderLoginLinks';
 import { LoggedUser } from './LoggedUser';
 
 export function HeaderToolbar(): ReactElement {
@@ -28,7 +28,7 @@ export function HeaderToolbar(): ReactElement {
         <ToolbarPart data-right>
           { logged
             ? <LoggedUser user={ currentUser } onLogout={ logout } />
-            : <HeaderLoginLink />
+            : <HeaderLoginLinks />
           }
         </ToolbarPart>
       </Toolbar>

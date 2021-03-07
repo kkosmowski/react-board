@@ -16,6 +16,7 @@ export const endpoint: Endpoint = {
   categories: endpointFactory('categories'),
   login: endpointFactory('login'),
   me: endpointFactory('users/me'),
+  register: endpointFactory('users'),
 };
 
 export const endpointWithProp: EndpointWithProp = {

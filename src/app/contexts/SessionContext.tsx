@@ -1,5 +1,5 @@
 import { createContext, ReactElement, useEffect, useState } from 'react';
-import { LoginForm, Session } from '@interfaces';
+import { LoginForm, RegisterForm, Session } from '@interfaces';
 import { endpoint, endpointWithProp, SessionUtil } from '@utils';
 import { HttpService } from '@services';
 import { LoginResponse, MeResponse } from '@responses';
@@ -10,6 +10,7 @@ interface SessionProviderProps {
 }
 
 interface SessionContextProps {
+  createAccount: (form: RegisterForm) => Promise<void>;
   createSession: (form: LoginForm) => Promise<void>;
   currentUser: User;
   getCurrentUser: (userId: string) => void;
@@ -62,6 +63,11 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
     }
   }, [logged]);
 
+  const createAccount = (form: RegisterForm): Promise<void> => {
+    return HttpService
+      .post<RegisterForm>(endpoint.register, form)
+  };
+
   const createSession = (form: LoginForm): Promise<void> => {
     return HttpService
       .post<LoginForm>(endpoint.login, form)
@@ -97,6 +103,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
       createSession,
       currentUser, setCurrentUser, getCurrentUser,
       logout,
+      createAccount,
     } as SessionContextProps }>
       { children }
     </Provider>
@@ -110,6 +117,7 @@ const initialUser: User = {
 };
 
 const initialData: SessionContextProps = {
+  createAccount: (form: RegisterForm) => Promise.resolve(),
   createSession: (form: LoginForm) => Promise.resolve(),
   currentUser: initialUser,
   getCurrentUser: (userId: string) => ({}),
