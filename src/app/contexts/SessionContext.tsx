@@ -1,9 +1,8 @@
-import { createContext, ReactElement, useContext, useEffect, useState } from 'react';
+import { createContext, ReactElement, useEffect, useState } from 'react';
 import { LoginForm, Session } from '@interfaces';
 import { endpoint, endpointWithProp, SessionUtil } from '@utils';
 import { HttpService } from '@services';
 import { LoginResponse, MeResponse } from '@responses';
-import { DataContext } from './DataContext';
 import { User } from '@models';
 
 interface SessionProviderProps {
@@ -65,8 +64,8 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
     }
   }, [logged]);
 
-  const createSession = (form: LoginForm): void => {
-    HttpService
+  const createSession = (form: LoginForm): Promise<void> => {
+    return HttpService
       .post<LoginForm>(endpoint.login, form)
       .then(({ token }: LoginResponse) => {
         setSession({
