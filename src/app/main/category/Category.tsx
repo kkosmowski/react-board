@@ -19,7 +19,6 @@ export function Category(): ReactElement {
   const { url } = useRouteMatch();
   const { categoryId } = useParams<CategoryRouteParams>();
   const { logged } = useContext(SessionContext);
-  // const { previousRoute } = useContext(RoutingContext);
   const { category, getCategory, threads } = useContext(DataContext);
   const [threadCollection, setThreadCollection] = useState<ReactElement[]>([]);
 

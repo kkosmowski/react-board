@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, ReactElement, useContext, useState } from 'react';
+import { ChangeEvent, FormEvent, ReactElement, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -51,68 +51,68 @@ export function LoginPanel({ onLogin }: LoginPanelProps): ReactElement {
   const handleLogin = (event: FormEvent) => {
     event.preventDefault();
     onLogin(form);
-  }
+  };
 
   return (
-      <form onSubmit={ handleLogin }>
-        <AuthCard>
-          <AuthCardContent>
-            <Typography variant="h6" component="span">Login</Typography>
+    <form onSubmit={ handleLogin }>
+      <AuthCard>
+        <AuthCardContent>
+          <Typography variant="h6" component="span">Login</Typography>
 
 
-            <FormControl>
-              <InputLabel htmlFor="login-username">Email</InputLabel>
-              <Input
-                id="login-username"
-                value={ form.username }
-                onChange={ handleChange('username') }
-              />
-              <FormHelperText> </FormHelperText>
-            </FormControl>
-
-            <FormControl>
-              <InputLabel htmlFor="login-password">Password</InputLabel>
-              <Input
-                id="login-password"
-                value={ form.password }
-                type={ showPassword ? 'text' : 'password' }
-                onChange={ handleChange('password') }
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="Toggle password visibility"
-                      onClick={ handleShowPasswordToggle }
-                    >
-                      { showPassword ? <Visibility /> : <VisibilityOff /> }
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-              <FormHelperText> </FormHelperText>
-            </FormControl>
-
-            <FormControlLabel
-              value={ form.remember }
-              control={ <Checkbox color="primary" onChange={ handleRememberMeChange } /> }
-              label="Remember me"
-              labelPlacement="end"
+          <FormControl>
+            <InputLabel htmlFor="login-username">Email</InputLabel>
+            <Input
+              id="login-username"
+              value={ form.username }
+              onChange={ handleChange('username') }
             />
-          </AuthCardContent>
-          <AuthCardActions>
-            <Button
-              onClick={ handleLogin }
-              type="submit"
-              variant="contained"
-              color="primary"
-              fullWidth
-            >
-              Login
-            </Button>
-            <GrayButton variant="contained" fullWidth>Go back</GrayButton>
-          </AuthCardActions>
-        </AuthCard>
-      </form>
-    );
+            <FormHelperText> </FormHelperText>
+          </FormControl>
+
+          <FormControl>
+            <InputLabel htmlFor="login-password">Password</InputLabel>
+            <Input
+              id="login-password"
+              value={ form.password }
+              type={ showPassword ? 'text' : 'password' }
+              onChange={ handleChange('password') }
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="Toggle password visibility"
+                    onClick={ handleShowPasswordToggle }
+                  >
+                    { showPassword ? <Visibility /> : <VisibilityOff /> }
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+            <FormHelperText> </FormHelperText>
+          </FormControl>
+
+          <FormControlLabel
+            value={ form.remember }
+            control={ <Checkbox color="primary" onChange={ handleRememberMeChange } /> }
+            label="Remember me"
+            labelPlacement="end"
+          />
+        </AuthCardContent>
+        <AuthCardActions>
+          <Button
+            onClick={ handleLogin }
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+          >
+            Login
+          </Button>
+          <GrayButton variant="contained" fullWidth>Go back</GrayButton>
+        </AuthCardActions>
+      </AuthCard>
+    </form>
+  );
 }
 
 const AuthCard = styled(Card)`
