@@ -20,7 +20,8 @@ export const endpoint: Endpoint = {
 
 export const endpointWithProp: EndpointWithProp = {
   category: (categoryId: string) => endpointFactory(`categories/${ categoryId }`),
-  threads: (categoryId: string) => endpointFactory(`categories/${ categoryId }/threads`),
   posts: (categoryId: string, threadId: string) => endpointFactory(`categories/${ categoryId }/threads/${ threadId }/posts`),
+  thread: (categoryId: string, threadId: string) => endpointFactory(`categories/${ categoryId }/threads/${ threadId }`),
+  threads: (categoryId: string) => endpointFactory(`categories/${ categoryId }/threads`),
   user: (userId: string) => endpointFactory(`users/${ userId }`),
 };

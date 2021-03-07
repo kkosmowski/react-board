@@ -11,17 +11,27 @@ import { ThreadRouteParams } from '@interfaces';
 export function Thread(): ReactElement {
   const { categoryId, threadId } = useParams<ThreadRouteParams>();
   const { logged } = useContext(SessionContext);
-  const { addReply, getPosts, mainElement, posts, thread, getThread } = useContext(DataContext);
+  const {
+    addReply,
+    clearThread,
+    getPosts,
+    mainElement,
+    posts,
+    thread,
+    getThread,
+    getCategory
+  } = useContext(DataContext);
   const [postCollection, setPostCollection] = useState<ReactElement[]>([]);
   const [replyVisible, setReplyVisible] = useState(false);
   const [threadScrollable, setThreadScrollable] = useState(false);
 
   useEffect(() => {
-    if (threadId) {
-      getThread(threadId);
+    if (categoryId) {
+      getCategory(categoryId);
+      getPosts(categoryId, threadId);
 
-      if (categoryId) {
-        getPosts(categoryId, threadId);
+      if (threadId) {
+        getThread(threadId, categoryId);
       }
     }
   }, [categoryId, threadId]);
@@ -42,6 +52,8 @@ export function Thread(): ReactElement {
       }, 0);
     }
   }, [posts]);
+
+  useEffect(() => clearThread, []);
 
   const handleReplyClick = () => {
     setReplyVisible(true);

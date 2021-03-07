@@ -63,6 +63,15 @@ export function AppBreadcrumbs(): ReactElement {
       });
     }
 
+    if (locationArray.includes('create-thread')) {
+      _breadcrumbs.push(
+        {
+          name: 'New thread',
+          route: '',
+        }
+      );
+    }
+
     setBreadcrumbs(_breadcrumbs);
   }, [location, category, thread, user]);
 
@@ -71,11 +80,11 @@ export function AppBreadcrumbs(): ReactElement {
       return breadcrumbs.map(({ name, route }: Breadcrumb, index: number) => {
         if (index !== breadcrumbs.length - 1) {
           return (
-            <Link to={ route } key={ name }>{ name }</Link>
+            <Link to={ route } key={ index }>{ name }</Link>
           );
         }
         return (
-          <span key={ name }>{ name }</span>
+          <span key={ index }>{ name }</span>
         );
       });
     }

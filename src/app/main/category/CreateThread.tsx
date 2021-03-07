@@ -25,7 +25,7 @@ export function CreateThread(): ReactElement {
   const { url } = useRouteMatch();
   const { categoryId } = useParams<CategoryRouteParams>();
   const { currentUser } = useContext(SessionContext);
-  const { createThread, getCategory } = useContext(DataContext);
+  const { category, createThread, getCategory } = useContext(DataContext);
   const [newThread, setNewThread] = useState<NewThread>({
     name: '',
     pinned: false,
@@ -57,7 +57,7 @@ export function CreateThread(): ReactElement {
     <form onSubmit={ handleSubmit } className="container">
       <Card>
         <CardContent className="container__content">
-          <CreateThreadTitle variant="h5">Create new thread</CreateThreadTitle>
+          <CreateThreadTitle variant="h5">Create new thread in { category.name }</CreateThreadTitle>
           <TextField
             value={ newThread.name }
             onChange={ handleChange(NewThreadChange.Name) }

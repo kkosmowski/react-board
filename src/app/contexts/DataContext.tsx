@@ -13,11 +13,12 @@ interface DataContextProps {
   addReply: (replyBody: string) => Promise<void>;
   categories: CategoryListItemModel[];
   category: CategoryModel;
+  clearThread: () => void;
   createThread: (newThread: NewThread) => Promise<void>;
   getCategories: () => void;
   getCategory: (categoryId: string) => void;
   getPosts: (categoryId: string, threadId: string) => void;
-  getThread: (threadId: string) => void;
+  getThread: (threadId: string, categoryId: string) => void;
   getUser: (userId: string) => void;
   mainElement: MutableRefObject<HTMLElement>;
   posts: PostModel[];
@@ -56,6 +57,10 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
         });
     }
     return Promise.resolve();
+  };
+
+  const clearThread = (): void => {
+    setThread(initialThread);
   };
 
   const createThread = (thread: NewThread): Promise<void> => {
@@ -110,12 +115,13 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       });
   };
 
-  const getThread = (threadId: string): void => {
-    setThread(threads.find((thread) => thread.id === threadId) as ThreadListItemModel);
-    setThreadDetails({
-      ...threadDetails,
-      threadId,
-    });
+  const getThread = (threadId: string, categoryId: string): void => {
+    HttpService
+      .get(endpointWithProp.thread(categoryId, threadId), session.token)
+      .then((thread: Partial<ThreadListItemModel>) => mapResponseItemToItem<ThreadListItemModel>(thread))
+      .then((thread: ThreadListItemModel) => {
+        setThread(thread);
+      });
   };
 
   const getUser = (userId: string): void => {
@@ -146,23 +152,25 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
     });
 
   const mapResponseCollectionToCollection = <T extends { id: string, url: string }>(responseCollection: Partial<T>[]): T[] =>
-    responseCollection.map((response) => {
-      if (response.url) {
-        const splitUrl = response.url.split('/');
-        return ({
-          ...response,
-          id: splitUrl[splitUrl.length - 2]
-        } as T);
-      }
-      return response as T;
-    });
+    responseCollection.map(mapResponseItemToItem);
+
+  const mapResponseItemToItem = <T extends { id: string, url: string }>(responseItem: Partial<T>): T => {
+    if (responseItem.url) {
+      const splitUrl = responseItem.url.split('/');
+      return ({
+        ...responseItem,
+        id: splitUrl[splitUrl.length - 2]
+      } as T);
+    }
+    return responseItem as T;
+  };
 
   return (
     <Provider value={ {
       categories, getCategories,
       category, getCategory, threads,
       posts, getPosts,
-      thread, getThread,
+      thread, getThread, clearThread,
       mainElement, setMainElement,
       addReply, createThread,
       user, getUser,
@@ -210,11 +218,12 @@ const initialData: DataContextProps = {
   addReply: (replyBody: string) => Promise.resolve(),
   categories: [],
   category: initialCategory,
+  clearThread: () => ({}),
   createThread: (newThread: NewThread) => Promise.resolve(),
   getCategories: () => ({}),
   getCategory: (categoryId: string) => ({}),
   getPosts: (categoryId: string, threadId: string) => ({}),
-  getThread: (threadId: string) => ({}),
+  getThread: (threadId: string, categoryId: string) => ({}),
   getUser: (userId: string) => ({}),
   mainElement: {} as MutableRefObject<HTMLElement>,
   posts: [],
