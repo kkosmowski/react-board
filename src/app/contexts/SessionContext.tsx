@@ -10,19 +10,19 @@ interface SessionProviderProps {
 }
 
 interface SessionContextProps {
-  logged: boolean | null;
-  session: Session;
   createSession: (form: LoginForm) => Promise<void>;
-  logout: () => void;
   currentUser: User;
-  setCurrentUser: (user: User) => User;
   getCurrentUser: (userId: string) => void;
+  logged: boolean | null;
+  logout: () => void;
+  session: Session;
+  setCurrentUser: (user: User) => User;
 }
 
 const initialSession = {
+  persisted: false,
   token: '',
   username: '',
-  persisted: false,
 };
 
 const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
@@ -74,11 +74,6 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
       });
   };
 
-  const logout = (): void => {
-    setLogged(false);
-    SessionUtil.clearSession(session.persisted);
-  };
-
   const getCurrentUser = (userId: string): void => {
     if (session.token) {
       HttpService
@@ -89,6 +84,11 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
         }) as User)
         .then(setCurrentUser);
     }
+  };
+
+  const logout = (): void => {
+    setLogged(false);
+    SessionUtil.clearSession(session.persisted);
   };
 
   return (
@@ -105,22 +105,22 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
 
 const initialUser: User = {
   id: '',
-  username: '',
   role: null,
+  username: '',
 };
 
 const initialData: SessionContextProps = {
+  createSession: (form: LoginForm) => Promise.resolve(),
+  currentUser: initialUser,
+  getCurrentUser: (userId: string) => ({}),
   logged: null,
+  logout: () => ({}),
   session: {
     username: '',
     token: '',
     persisted: false,
   },
-  createSession: (form: LoginForm) => Promise.resolve(),
-  logout: () => ({}),
-  currentUser: initialUser,
   setCurrentUser: (initialUser: User) => initialUser,
-  getCurrentUser: (userId: string) => ({}),
 };
 
 const SessionContext = createContext<SessionContextProps>(initialData);

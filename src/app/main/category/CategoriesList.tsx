@@ -2,7 +2,6 @@ import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import { CategoryListItemModel } from '@models';
 import { CategoryListItem } from './CategoryListItem';
 import { DataContext } from '@contexts';
-import styled from 'styled-components';
 
 export function CategoriesList(): ReactElement {
   const { categories, getCategories } = useContext(DataContext);

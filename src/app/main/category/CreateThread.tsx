@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import { CategoryRouteParams, NewThread } from '@interfaces';
 import { DataContext, SessionContext } from '@contexts';
 import { Role } from '@enums';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 
 enum NewThreadChange {
   Name = 'name',
@@ -22,6 +22,7 @@ enum NewThreadChange {
 
 export function CreateThread(): ReactElement {
   const history = useHistory();
+  const { url } = useRouteMatch();
   const { categoryId } = useParams<CategoryRouteParams>();
   const { currentUser } = useContext(SessionContext);
   const { createThread, getCategory } = useContext(DataContext);
@@ -48,7 +49,7 @@ export function CreateThread(): ReactElement {
     event.preventDefault();
     event.stopPropagation();
     createThread(newThread).then(() => {
-      history.push(`/home/category/${ categoryId }`);
+      history.push(url.split('/').slice(0, -1).join('/'));
     });
   };
 
