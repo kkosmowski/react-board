@@ -16,8 +16,7 @@ interface SessionContextProps {
   logout: () => void;
   currentUser: User;
   setCurrentUser: (user: User) => User;
-  user: User;
-  getUser: (userId: string) => void;
+  getCurrentUser: (userId: string) => void;
 }
 
 const initialSession = {
@@ -32,7 +31,6 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
   const [session, setSession] = useState<Session>(initialSession);
   const [logged, setLogged] = useState<boolean | null>(null);
   const [currentUser, setCurrentUser] = useState<User>(initialUser);
-  const [user, setUser] = useState<User>(initialUser);
 
   useEffect(() => {
     if (session.token && session.username) {
@@ -81,7 +79,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
     SessionUtil.clearSession(session.persisted);
   };
 
-  const getUser = (userId: string, currentUser = false): void => {
+  const getCurrentUser = (userId: string): void => {
     if (session.token) {
       HttpService
         .get(endpointWithProp.user(userId), session.token)
@@ -89,13 +87,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
           ...user,
           id: userId,
         }) as User)
-        .then((user: User) => {
-          if (currentUser) {
-            setCurrentUser(user);
-          } else {
-            setUser(user);
-          }
-        });
+        .then(setCurrentUser);
     }
   };
 
@@ -103,9 +95,8 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
     <Provider value={ {
       logged, session,
       createSession,
-      currentUser, setCurrentUser,
+      currentUser, setCurrentUser, getCurrentUser,
       logout,
-      user, getUser,
     } as SessionContextProps }>
       { children }
     </Provider>
@@ -129,8 +120,7 @@ const initialData: SessionContextProps = {
   logout: () => ({}),
   currentUser: initialUser,
   setCurrentUser: (initialUser: User) => initialUser,
-  user: initialUser,
-  getUser: (userId: string) => ({}),
+  getCurrentUser: (userId: string) => ({}),
 };
 
 const SessionContext = createContext<SessionContextProps>(initialData);

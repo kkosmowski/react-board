@@ -18,7 +18,7 @@ export function Post({ post }: PostProps): ReactElement {
           <address>
             <RouterLink
               rel="author"
-              to={ `/home/users/${ post.created_by.id }/` }
+              to={ `/home/users/${ post.created_by.id }` }
             >
               { post.created_by.username }
             </RouterLink>

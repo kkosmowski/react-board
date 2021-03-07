@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Card, CardContent, Typography } from '@material-ui/core';
-import { Link as RouterLink, useRouteMatch } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import styled from 'styled-components';
 import { CategoryListItemModel } from '@models';
 
@@ -44,7 +44,7 @@ const CategoryCard = styled(Card)`
   margin-bottom: 32px;
 `;
 
-const CategoryLink = styled(RouterLink)`
+const CategoryLink = styled(Link)`
   &:hover {
     text-decoration: none;
 

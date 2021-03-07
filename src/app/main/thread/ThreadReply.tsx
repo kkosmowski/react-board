@@ -1,7 +1,10 @@
 import { Button, Card, CardContent, TextField } from '@material-ui/core';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { ThreadRouteParams } from '@interfaces';
+import { DataContext } from '@contexts';
 
 interface ThreadReplyProps {
   onAddReply: (replyBody: string) => Promise<any>;
@@ -11,6 +14,7 @@ interface ThreadReplyProps {
 export function ThreadReply({ onAddReply, logged }: ThreadReplyProps): ReactElement {
   const [replyBody, setReplyBody] = useState('');
   const [replyError, setReplyError] = useState(' ');
+
   const handleAddReply = () => {
     if (logged) {
       if (replyBody.trim()) {

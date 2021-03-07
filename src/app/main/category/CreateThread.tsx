@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, ReactElement, useContext, useState } from 'react';
+import React, { ChangeEvent, FormEvent, ReactElement, useContext, useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -24,12 +24,18 @@ export function CreateThread(): ReactElement {
   const history = useHistory();
   const { categoryId } = useParams<CategoryRouteParams>();
   const { currentUser } = useContext(SessionContext);
-  const { createThread } = useContext(DataContext);
+  const { createThread, getCategory } = useContext(DataContext);
   const [newThread, setNewThread] = useState<NewThread>({
     name: '',
     pinned: false,
     post_body: '',
   });
+
+  useEffect(() => {
+    if (categoryId) {
+      getCategory(categoryId);
+    }
+  }, [categoryId]);
 
   const handleChange = (change: NewThreadChange) => (event: ChangeEvent<HTMLInputElement>) => {
     setNewThread({
@@ -47,8 +53,8 @@ export function CreateThread(): ReactElement {
   };
 
   return (
-    <Card className="container">
-      <form onSubmit={ handleSubmit }>
+    <form onSubmit={ handleSubmit } className="container">
+      <Card>
         <CardContent className="container__content">
           <CreateThreadTitle variant="h5">Create new thread</CreateThreadTitle>
           <TextField
@@ -97,8 +103,8 @@ export function CreateThread(): ReactElement {
             Create thread
           </AddPostButton>
         </CardContent>
-      </form>
-    </Card>
+      </Card>
+    </form>
   );
 }
 

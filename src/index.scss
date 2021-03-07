@@ -24,6 +24,13 @@ body,
   overflow: hidden;
 }
 
+html body #root {
+  .container {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 main.board {
   overflow: auto;
   margin-top: 64px;
@@ -43,8 +50,8 @@ a {
   }
 }
 
-.header__logo + .container {
-  margin-top: 64px;
+.breadcrumbs + .container {
+  margin-top: 32px;
 }
 
 .container {
@@ -53,7 +60,8 @@ a {
   width: 100%;
   max-width: 1200px;
   padding: 0 16px;
-  margin: 0 auto 64px;
+  margin-top: 0;
+  margin-bottom: 64px;
 
   .container__content {
     padding-left: 24px;

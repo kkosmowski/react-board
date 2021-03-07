@@ -48,30 +48,33 @@ export function Category(): ReactElement {
   };
 
   return (
-    <CategoryCard className="container">
-      <CategoryContent>
-        <Typography component="h5" variant="h5">{ category.name }</Typography>
+    <div className="container">
+      <CategoryCard>
+        <CategoryContent>
+          <Typography component="h5" variant="h5">{ category.name }</Typography>
 
-        <Button
-          type="button"
-          title="New thread"
-          color="secondary"
-          variant="contained"
-          onClick={ handleNewThread }
-        >
-          New thread
-        </Button>
-      </CategoryContent>
-      <List>
-        { threadCollection }
-      </List>
-    </CategoryCard>
+          <Button
+            type="button"
+            title="New thread"
+            color="secondary"
+            variant="contained"
+            onClick={ handleNewThread }
+          >
+            New thread
+          </Button>
+        </CategoryContent>
+        <List>
+          { threadCollection }
+        </List>
+      </CategoryCard>
+    </div>
   );
 }
 
 const CategoryCard = styled(Card)`
   && {
     overflow: visible;
+    padding: 16px 24px;
   }
 `;
 

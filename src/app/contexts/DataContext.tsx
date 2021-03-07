@@ -1,4 +1,4 @@
-import { CategoryListItemModel, CategoryModel, PostModel, ThreadListItemModel } from '@models';
+import { CategoryListItemModel, CategoryModel, PostModel, ThreadListItemModel, User } from '@models';
 import { createContext, MutableRefObject, ReactElement, useContext, useRef, useState } from 'react';
 import { HttpService } from '@services';
 import { endpoint, endpointWithProp } from '@utils';
@@ -15,14 +15,16 @@ interface DataContextProps {
   category: CategoryModel;
   getCategory: (categoryId: string) => void;
   threads: ThreadListItemModel[];
-  posts: PostModel[];
-  getPosts: (categoryId: string, threadId: string) => void;
   thread: ThreadListItemModel;
   getThread: (threadId: string) => void;
+  posts: PostModel[];
+  getPosts: (categoryId: string, threadId: string) => void;
   mainElement: MutableRefObject<HTMLElement>;
   setMainElement: (element: MutableRefObject<HTMLElement>) => MutableRefObject<HTMLElement>;
   addReply: (replyBody: string) => Promise<void>;
   createThread: (newThread: NewThread) => Promise<void>;
+  user: User;
+  getUser: (userId: string) => void;
 }
 
 const DataProvider = ({ children }: DataProviderProps): ReactElement => {
@@ -36,6 +38,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
   const [posts, setPosts] = useState<PostModel[]>([]);
   const [mainElement, setMainElement] = useState<MutableRefObject<HTMLElement>>(useRef(document.body));
   const [threadDetails, setThreadDetails] = useState<ThreadDetails>({ threadId: '', categoryId: '' });
+  const [user, setUser] = useState<User>(initialUser);
 
   const mapResponseCollectionToCollection = <T extends { id: string, url: string }>(responseCollection: Partial<T>[]): T[] =>
     responseCollection.map((response) => {
@@ -63,12 +66,10 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       .get(endpointWithProp.category(categoryId), session.token)
       .then((category: CategoryModel) => {
         setCategory(category);
-        console.log(categoryId);
         setThreadDetails({
           ...threadDetails,
           categoryId,
         });
-        console.log(threadDetails);
       });
 
     HttpService
@@ -94,7 +95,6 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       ...threadDetails,
       threadId,
     });
-    console.log(threadDetails);
   };
 
   const mapPostResponseCollectionToPostModelCollection = (posts: Partial<PostModel>[]): PostModel[] =>
@@ -145,6 +145,18 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       });
   };
 
+  const getUser = (userId: string): void => {
+    if (session.token) {
+      HttpService
+        .get(endpointWithProp.user(userId), session.token)
+        .then((user: Partial<User>) => ({
+          ...user,
+          id: userId,
+        }) as User)
+        .then(setUser);
+    }
+  };
+
   return (
     <Provider value={ {
       categories, getCategories,
@@ -152,7 +164,8 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       posts, getPosts,
       thread, getThread,
       mainElement, setMainElement,
-      addReply, createThread
+      addReply, createThread,
+      user, getUser,
     } as DataContextProps }>
       { children }
     </Provider>
@@ -162,6 +175,12 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
 const initialCategory: CategoryModel = {
   id: '',
   name: '',
+};
+
+const initialUser: User = {
+  id: '',
+  username: '',
+  role: null,
 };
 
 const initialThread: ThreadListItemModel = {
@@ -201,6 +220,8 @@ const initialData: DataContextProps = {
   setMainElement: (element: MutableRefObject<HTMLElement>) => element,
   addReply: (replyBody: string) => Promise.resolve(),
   createThread: (newThread: NewThread) => Promise.resolve(),
+  user: initialUser,
+  getUser: (userId: string) => ({}),
 };
 
 const DataContext = createContext<DataContextProps>(initialData);

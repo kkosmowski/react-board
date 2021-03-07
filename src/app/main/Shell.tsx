@@ -5,6 +5,7 @@ import { Thread } from '@main/thread';
 import { Profile } from '@main/profile';
 import { useContext, useEffect, useRef } from 'react';
 import { DataContext } from '@contexts';
+import { AppBreadcrumbs } from './AppBreadcrumbs';
 
 export function Shell() {
   const { url } = useRouteMatch();
@@ -18,6 +19,7 @@ export function Shell() {
   return (
     <main className="board" ref={ mainElement }>
       <Header />
+      <AppBreadcrumbs />
       <Switch>
         <Route exact path={ url }>
           <CategoriesList />
