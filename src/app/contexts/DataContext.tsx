@@ -3,7 +3,7 @@ import { createContext, MutableRefObject, ReactElement, useContext, useRef, useS
 import { HttpService } from '@services';
 import { endpoint, endpointWithProp } from '@utils';
 import { SessionContext } from './SessionContext';
-import { ThreadId } from '@interfaces';
+import { NewThread, ThreadDetails } from '@interfaces';
 
 interface DataProviderProps {
   children: ReactElement | ReactElement[];
@@ -21,7 +21,8 @@ interface DataContextProps {
   getThread: (threadId: string) => void;
   mainElement: MutableRefObject<HTMLElement>;
   setMainElement: (element: MutableRefObject<HTMLElement>) => MutableRefObject<HTMLElement>;
-  addReply: (replyBody: string) => Promise<any>;
+  addReply: (replyBody: string) => Promise<void>;
+  createThread: (newThread: NewThread) => Promise<void>;
 }
 
 const DataProvider = ({ children }: DataProviderProps): ReactElement => {
@@ -34,7 +35,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
   const [thread, setThread] = useState<ThreadListItemModel>(initialThread);
   const [posts, setPosts] = useState<PostModel[]>([]);
   const [mainElement, setMainElement] = useState<MutableRefObject<HTMLElement>>(useRef(document.body));
-  const [threadId, setThreadId] = useState<ThreadId>({ thread: '', category: '' });
+  const [threadDetails, setThreadDetails] = useState<ThreadDetails>({ threadId: '', categoryId: '' });
 
   const mapResponseCollectionToCollection = <T extends { id: string, url: string }>(responseCollection: Partial<T>[]): T[] =>
     responseCollection.map((response) => {
@@ -62,6 +63,12 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       .get(endpointWithProp.category(categoryId), session.token)
       .then((category: CategoryModel) => {
         setCategory(category);
+        console.log(categoryId);
+        setThreadDetails({
+          ...threadDetails,
+          categoryId,
+        });
+        console.log(threadDetails);
       });
 
     HttpService
@@ -69,10 +76,6 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       .then((threads: Partial<ThreadListItemModel>[]) => mapResponseCollectionToCollection<ThreadListItemModel>(threads))
       .then((threads: ThreadListItemModel[]) => {
         setThreads(threads);
-        setThreadId({
-          category: '',
-          thread: '',
-        });
       });
   };
 
@@ -82,15 +85,16 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       .then(mapPostResponseCollectionToPostModelCollection)
       .then((posts: PostModel[]) => {
         setPosts(posts);
-        setThreadId({
-          category: categoryId,
-          thread: threadId,
-        });
       });
   };
 
   const getThread = (threadId: string): void => {
     setThread(threads.find((thread) => thread.id === threadId) as ThreadListItemModel);
+    setThreadDetails({
+      ...threadDetails,
+      threadId,
+    });
+    console.log(threadDetails);
   };
 
   const mapPostResponseCollectionToPostModelCollection = (posts: Partial<PostModel>[]): PostModel[] =>
@@ -109,10 +113,10 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
     });
 
   const addReply = (replyBody: string): Promise<any> => {
-    if (threadId.thread && threadId.category) {
+    if (threadDetails.threadId && threadDetails.categoryId) {
       return HttpService
         .post(
-          endpointWithProp.posts(threadId.category, threadId.thread),
+          endpointWithProp.posts(threadDetails.categoryId, threadDetails.threadId),
           { body: replyBody },
           session.token
         )
@@ -126,6 +130,21 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
     return Promise.resolve();
   };
 
+  const createThread = (thread: NewThread): Promise<void> => {
+    return HttpService
+      .post(
+        endpointWithProp.threads(threadDetails.categoryId),
+        { ...thread },
+        session.token
+      )
+      .then((newThread: ThreadListItemModel) => {
+        setThreads([
+          ...threads,
+          newThread
+        ]);
+      });
+  };
+
   return (
     <Provider value={ {
       categories, getCategories,
@@ -133,7 +152,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       posts, getPosts,
       thread, getThread,
       mainElement, setMainElement,
-      addReply,
+      addReply, createThread
     } as DataContextProps }>
       { children }
     </Provider>
@@ -180,7 +199,8 @@ const initialData: DataContextProps = {
   getThread: (threadId: string) => ({}),
   mainElement: {} as MutableRefObject<HTMLElement>,
   setMainElement: (element: MutableRefObject<HTMLElement>) => element,
-  addReply: (replyBody: string) => Promise.resolve()
+  addReply: (replyBody: string) => Promise.resolve(),
+  createThread: (newThread: NewThread) => Promise.resolve(),
 };
 
 const DataContext = createContext<DataContextProps>(initialData);

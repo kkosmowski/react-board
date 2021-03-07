@@ -1,5 +1,5 @@
 import { Header } from '@main/header';
-import { CategoriesList, Category } from '@main/category';
+import { CategoriesList, Category, CreateThread } from '@main/category';
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { Thread } from '@main/thread';
 import { Profile } from '@main/profile';
@@ -30,6 +30,9 @@ export function Shell() {
         </Route>
         <Route path={ `${ url }/users/:userId` }>
           <Profile />
+        </Route>
+        <Route path={ `${ url }/category/:categoryId/create-thread` }>
+          <CreateThread />
         </Route>
         <Route path="*">
           <Redirect to="/home" />

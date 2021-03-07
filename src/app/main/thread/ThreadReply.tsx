@@ -4,19 +4,24 @@ import { ReactElement } from 'react';
 import styled from 'styled-components';
 
 interface ThreadReplyProps {
-  onAddReply: (replyBody: string) => Promise<any>
+  onAddReply: (replyBody: string) => Promise<any>;
+  logged: boolean | null;
 }
 
-export function ThreadReply({ onAddReply }: ThreadReplyProps): ReactElement {
+export function ThreadReply({ onAddReply, logged }: ThreadReplyProps): ReactElement {
   const [replyBody, setReplyBody] = useState('');
   const [replyError, setReplyError] = useState(' ');
   const handleAddReply = () => {
-    if (replyBody.trim()) {
-      onAddReply(replyBody).then(() => {
-        setReplyBody(' ');
-      });
+    if (logged) {
+      if (replyBody.trim()) {
+        onAddReply(replyBody).then(() => {
+          setReplyBody(' ');
+        });
+      } else {
+        setReplyError('Post content cannot be empty.');
+      }
     } else {
-      setReplyError('Post content cannot be empty.');
+      setReplyError('Cannot reply as a guest.');
     }
   };
 

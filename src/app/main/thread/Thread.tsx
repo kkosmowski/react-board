@@ -1,19 +1,16 @@
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
-import { DataContext } from '@contexts';
+import { DataContext, SessionContext } from '@contexts';
 import { useParams } from 'react-router-dom';
 import { PostModel } from '@models';
 import { Post } from './Post';
 import { Button, Typography } from '@material-ui/core';
 import './Thread.scss';
 import { ThreadReply } from './ThreadReply';
-
-interface ThreadRouteParams {
-  categoryId: string;
-  threadId: string;
-}
+import { ThreadRouteParams } from '@interfaces';
 
 export function Thread(): ReactElement {
-  const { categoryId, threadId }: ThreadRouteParams = useParams();
+  const { categoryId, threadId } = useParams<ThreadRouteParams>();
+  const { logged } = useContext(SessionContext);
   const { addReply, getPosts, mainElement, posts, thread, getThread } = useContext(DataContext);
   const [postCollection, setPostCollection] = useState<ReactElement[]>([]);
   const [replyVisible, setReplyVisible] = useState(false);
@@ -39,9 +36,11 @@ export function Thread(): ReactElement {
     });
 
     setPostCollection(collection);
-    setTimeout(() => {
-      setThreadScrollable(mainElement.current.scrollHeight > window.innerHeight);
-    }, 0);
+    if (mainElement && mainElement.current) {
+      setTimeout(() => {
+        setThreadScrollable(mainElement.current.scrollHeight > window.innerHeight);
+      }, 0);
+    }
   }, [posts]);
 
   const handleReplyClick = () => {
@@ -77,7 +76,7 @@ export function Thread(): ReactElement {
       </header>
       { postCollection }
       { replyVisible
-        ? <ThreadReply onAddReply={ addReply } />
+        ? <ThreadReply onAddReply={ addReply } logged={ logged } />
         : threadScrollable
           ? createReplyButton()
           : null

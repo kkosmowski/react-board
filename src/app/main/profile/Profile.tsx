@@ -2,13 +2,10 @@ import { Card, CardContent } from '@material-ui/core';
 import { ReactElement, useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { SessionContext } from '@contexts';
-
-interface ProfileRouteParams {
-  userId: string;
-}
+import { ProfileRouteParams } from '@interfaces';
 
 export function Profile(): ReactElement {
-  const { userId }: ProfileRouteParams = useParams();
+  const { userId } = useParams<ProfileRouteParams>();
   const { user, getUser, logged } = useContext(SessionContext);
 
   useEffect(() => {

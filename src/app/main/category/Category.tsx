@@ -1,7 +1,7 @@
 import { ReactElement, useContext, useEffect, useState } from 'react';
 import { ThreadListItemModel } from '@models';
-import { DataContext } from '@contexts';
-import { useParams } from 'react-router-dom';
+import { DataContext, SessionContext } from '@contexts';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import {
   Button,
   Card,
@@ -12,13 +12,14 @@ import {
 import React from 'react';
 import styled from 'styled-components';
 import { ThreadListItem } from '@main/thread';
-
-interface CategoryRouteParams {
-  categoryId: string;
-}
+import { CategoryRouteParams } from '@interfaces';
 
 export function Category(): ReactElement {
-  const { categoryId }: CategoryRouteParams = useParams();
+  const history = useHistory();
+  const { url } = useRouteMatch();
+  const { categoryId } = useParams<CategoryRouteParams>();
+  const { logged } = useContext(SessionContext);
+  // const { previousRoute } = useContext(RoutingContext);
   const { category, getCategory, threads } = useContext(DataContext);
   const [threadCollection, setThreadCollection] = useState<ReactElement[]>([]);
 
@@ -39,7 +40,11 @@ export function Category(): ReactElement {
   }, [threads]);
 
   const handleNewThread = () => {
-    console.log('new thread');
+    if (logged) {
+      history.push(`${ url }/create-thread`);
+    } else {
+      history.push('/auth');
+    }
   };
 
   return (
