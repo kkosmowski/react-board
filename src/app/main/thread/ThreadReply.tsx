@@ -1,10 +1,8 @@
 import { Button, Card, CardContent, TextField } from '@material-ui/core';
-import React, { ChangeEvent, useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
-import { ThreadRouteParams } from '@interfaces';
-import { DataContext } from '@contexts';
+import { AppBreadcrumbs, BackButton } from '@main';
 
 interface ThreadReplyProps {
   onAddReply: (replyBody: string) => Promise<any>;
@@ -35,7 +33,7 @@ export function ThreadReply({ onAddReply, logged }: ThreadReplyProps): ReactElem
   };
 
   return (
-    <Card className="container">
+    <Card className="root-container">
       <CardContent className="container__content">
         <TextField
           value={ replyBody }

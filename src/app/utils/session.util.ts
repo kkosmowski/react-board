@@ -5,19 +5,19 @@ import Cookies from 'js-cookie';
 export class SessionUtil {
   static checkIfSessionExists(): Session | null {
     let token = Cookies.get(SessionKey.Token);
-    let username = Cookies.get(SessionKey.Username);
-    if (token && username) {
+    let email = Cookies.get(SessionKey.Email);
+    if (token && email) {
       return {
-        username,
+        email,
         token,
         persisted: true,
       };
     } else {
       let token = sessionStorage.getItem(SessionKey.Token);
-      let username = sessionStorage.getItem(SessionKey.Username);
-      if (token && username) {
+      let email = sessionStorage.getItem(SessionKey.Email);
+      if (token && email) {
         return {
-          username,
+          email,
           token,
           persisted: false,
         };
@@ -29,20 +29,20 @@ export class SessionUtil {
   static setSession(session: Session): void {
     if (session.persisted) {
       Cookies.set(SessionKey.Token, session.token);
-      Cookies.set(SessionKey.Username, session.username);
+      Cookies.set(SessionKey.Email, session.email);
     } else {
       sessionStorage.setItem(SessionKey.Token, session.token);
-      sessionStorage.setItem(SessionKey.Username, session.username);
+      sessionStorage.setItem(SessionKey.Email, session.email);
     }
   }
 
   static clearSession(persisted: boolean): void {
     if (persisted) {
       Cookies.remove(SessionKey.Token);
-      Cookies.remove(SessionKey.Username);
+      Cookies.remove(SessionKey.Email);
     } else {
       sessionStorage.removeItem(SessionKey.Token);
-      sessionStorage.removeItem(SessionKey.Username);
+      sessionStorage.removeItem(SessionKey.Email);
     }
   }
 }

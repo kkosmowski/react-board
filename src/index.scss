@@ -50,16 +50,20 @@ a {
   }
 }
 
-.breadcrumbs + .container {
+.breadcrumbs + .container:not(.back-button) {
   margin-top: 32px;
 }
 
 .container {
   display: flex;
-  flex-direction: column;
   width: 100%;
   max-width: 1200px;
   padding: 0 16px;
+}
+
+.root-container {
+  @extend .container;
+  flex-direction: column;
   margin-top: 0;
   margin-bottom: 64px;
 

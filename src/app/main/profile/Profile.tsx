@@ -3,6 +3,7 @@ import { ReactElement, useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { DataContext, SessionContext } from '@contexts';
 import { ProfileRouteParams } from '@interfaces';
+import { BackButton } from '@main';
 
 export function Profile(): ReactElement {
   const { userId } = useParams<ProfileRouteParams>();
@@ -16,12 +17,17 @@ export function Profile(): ReactElement {
   }, [userId, logged]);
 
   return (
-    <Card className="container">
-      <CardContent className="container__content">
-        <p>Id: { user.id }</p>
-        <p>Username: { user.username } </p>
-        <p>Role: { user.role }</p>
-      </CardContent>
-    </Card>
+    <>
+      <BackButton />
+      <div className="root-container">
+        <Card>
+          <CardContent className="container__content">
+            <p>Id: { user.id }</p>
+            <p>Email: { user.email }</p>
+            <p>Username: { user.username } </p>
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 }

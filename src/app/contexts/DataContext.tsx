@@ -187,6 +187,7 @@ const initialCategory: CategoryModel = {
 
 const initialUser: User = {
   id: '',
+  email: '',
   username: '',
   role: null,
 };

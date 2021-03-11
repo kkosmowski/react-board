@@ -7,6 +7,7 @@ import { Button, Typography } from '@material-ui/core';
 import './Thread.scss';
 import { ThreadReply } from './ThreadReply';
 import { ThreadRouteParams } from '@interfaces';
+import { AppBreadcrumbs, BackButton } from '@main';
 
 export function Thread(): ReactElement {
   const { categoryId, threadId } = useParams<ThreadRouteParams>();
@@ -77,22 +78,25 @@ export function Thread(): ReactElement {
   );
 
   return (
-    <div className="thread container">
-      <header className="thread__header">
-        <hgroup className="thread__details">
-          <Typography variant="h4" component="h4">Thread: { thread?.name }</Typography>
-        </hgroup>
-        <hgroup className="thread__controls">
-          { createReplyButton() }
-        </hgroup>
-      </header>
-      { postCollection }
-      { replyVisible
-        ? <ThreadReply onAddReply={ addReply } logged={ logged } />
-        : threadScrollable
-          ? createReplyButton()
-          : null
-      }
-    </div>
+    <>
+      <BackButton />
+      <div className="thread root-container">
+        <header className="thread__header">
+          <hgroup className="thread__details">
+            <Typography variant="h4" component="h4">Thread: { thread?.name }</Typography>
+          </hgroup>
+          <hgroup className="thread__controls">
+            { createReplyButton() }
+          </hgroup>
+        </header>
+        { postCollection }
+        { replyVisible
+          ? <ThreadReply onAddReply={ addReply } logged={ logged } />
+          : threadScrollable
+            ? createReplyButton()
+            : null
+        }
+      </div>
+    </>
   );
 }

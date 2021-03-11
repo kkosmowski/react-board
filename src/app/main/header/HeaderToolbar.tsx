@@ -11,7 +11,7 @@ export function HeaderToolbar(): ReactElement {
 
   return (
     <AppBar>
-      <Toolbar>
+      <StyledToolbar>
         <ToolbarPart data-left>
           <IconButton
             edge="start"
@@ -31,7 +31,7 @@ export function HeaderToolbar(): ReactElement {
             : <HeaderLoginLinks />
           }
         </ToolbarPart>
-      </Toolbar>
+      </StyledToolbar>
     </AppBar>
   );
 }
@@ -44,5 +44,16 @@ const ToolbarPart = styled.div`
   &[data-right] {
     justify-content: flex-end;
     color: ${ props => props.theme.palette.secondary.main };
+
+    * + * {
+      margin-left: 32px;
+    }
+  }
+`;
+
+const StyledToolbar = styled(Toolbar)`
+  && {
+    padding-left: 48px;
+    padding-right: 48px;
   }
 `;

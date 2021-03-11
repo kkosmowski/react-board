@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import styled from 'styled-components';
+import { useHistory } from 'react-router-dom';
 
 interface RegisterPanelProps {
   onRegister: (form: RegisterForm) => void;
@@ -20,6 +21,7 @@ interface RegisterPanelProps {
 
 // TODO: Try to refactor in the future since RegisterPanel and LoginPanel use a lot of common logic
 export function RegisterPanel({ onRegister }: RegisterPanelProps): ReactElement {
+  const history = useHistory();
   const initialErrors = {
     email: ' ',
     username: ' ',
@@ -227,7 +229,13 @@ export function RegisterPanel({ onRegister }: RegisterPanelProps): ReactElement 
           >
             Register
           </Button>
-          <GrayButton variant="contained" fullWidth>Go back</GrayButton>
+          <GrayButton
+            onClick={ history.goBack }
+            variant="contained"
+            fullWidth
+          >
+            Go back
+          </GrayButton>
         </>
       </AuthPanel>
     </form>

@@ -46,7 +46,7 @@ export function Category(): ReactElement {
   };
 
   return (
-    <div className="container">
+    <div className="root-container">
       <CategoryCard>
         <CategoryContent>
           <Typography component="h5" variant="h5">{ category.name }</Typography>

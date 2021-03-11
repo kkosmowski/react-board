@@ -13,12 +13,14 @@ import styled from 'styled-components';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { LoginForm } from '@interfaces';
 import { AuthPanel } from './AuthPanel';
+import { useHistory } from 'react-router-dom';
 
 interface LoginPanelProps {
   onLogin: (form: LoginForm) => void;
 }
 
 export function LoginPanel({ onLogin }: LoginPanelProps): ReactElement {
+  const history = useHistory();
   const [form, setForm] = useState<LoginForm>({
     username: '',
     password: '',
@@ -105,7 +107,13 @@ export function LoginPanel({ onLogin }: LoginPanelProps): ReactElement {
           >
             Login
           </Button>
-          <GrayButton variant="contained" fullWidth>Go back</GrayButton>
+          <GrayButton
+            onClick={ history.goBack }
+            variant="contained"
+            fullWidth
+          >
+            Go back
+          </GrayButton>
         </>
       </AuthPanel>
     </form>

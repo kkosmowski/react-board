@@ -24,7 +24,7 @@ export function CategoriesList(): ReactElement {
   }, [categories]);
 
   return (
-    <div className="container">
+    <div className="root-container">
       { categoriesList }
     </div>);
 }

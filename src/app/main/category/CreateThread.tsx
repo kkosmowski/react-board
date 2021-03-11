@@ -13,6 +13,7 @@ import { CategoryRouteParams, NewThread } from '@interfaces';
 import { DataContext, SessionContext } from '@contexts';
 import { Role } from '@enums';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { BackButton } from '@main';
 
 enum NewThreadChange {
   Name = 'name',
@@ -26,11 +27,18 @@ export function CreateThread(): ReactElement {
   const { categoryId } = useParams<CategoryRouteParams>();
   const { currentUser } = useContext(SessionContext);
   const { category, createThread, getCategory } = useContext(DataContext);
+
   const [newThread, setNewThread] = useState<NewThread>({
     name: '',
     pinned: false,
     post_body: '',
   });
+
+  const initialErrors = {
+    name: ' ',
+    post_body: ' ',
+  };
+  const [errors, setErrors] = useState(initialErrors);
 
   useEffect(() => {
     if (categoryId) {
@@ -43,69 +51,94 @@ export function CreateThread(): ReactElement {
       ...newThread,
       [change]: event.target.value,
     } as NewThread);
+
+    setErrors({
+      ...errors,
+      [change]: ' ',
+    });
   };
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    createThread(newThread).then(() => {
-      history.push(url.split('/').slice(0, -1).join('/'));
-    });
+    const _errors = initialErrors;
+    let formValid = true;
+
+    if (!newThread.name.trim()) {
+      _errors.name = 'Thread name cannot be empty.';
+      formValid = false;
+    }
+
+    if (!newThread.post_body.trim()) {
+      _errors.post_body = 'Thread body cannot be empty.';
+      formValid = false;
+    }
+
+    if (formValid) {
+      createThread(newThread).then(() => {
+        history.push(url.split('/').slice(0, -1).join('/'));
+      });
+    } else {
+      setErrors(_errors);
+    }
   };
 
   return (
-    <form onSubmit={ handleSubmit } className="container">
-      <Card>
-        <CardContent className="container__content">
-          <CreateThreadTitle variant="h5">Create new thread in { category.name }</CreateThreadTitle>
-          <TextField
-            value={ newThread.name }
-            onChange={ handleChange(NewThreadChange.Name) }
-            id="standard-multiline-static"
-            label="Name"
-            rows={ 3 }
-            rowsMax={ 6 }
-            variant="filled"
-            fullWidth
-            autoFocus
-            helperText={ ' ' }
-            // error={ !!replyError.trim() }
-          />
-
-          <TextField
-            value={ newThread.post_body }
-            onChange={ handleChange(NewThreadChange.PostBody) }
-            id="standard-multiline-static"
-            label="Body"
-            multiline
-            rows={ 3 }
-            rowsMax={ 6 }
-            variant="filled"
-            fullWidth
-            helperText={ ' ' }
-            // error={ !!replyError.trim() }
-          />
-
-          { currentUser.role === Role.Admin
-            ? <PinnedCheckbox
-              value={ newThread.pinned }
-              control={ <Checkbox color="primary" onChange={ handleChange(NewThreadChange.Pinned) } /> }
-              label="Pin the thread"
-              labelPlacement="end"
+    <>
+      <BackButton />
+      <form onSubmit={ handleSubmit } className="root-container">
+        <Card>
+          <CardContent className="container__content">
+            <CreateThreadTitle variant="h5">Create new thread in { category.name }</CreateThreadTitle>
+            <TextField
+              value={ newThread.name }
+              onChange={ handleChange(NewThreadChange.Name) }
+              id="standard-multiline-static"
+              label="Name"
+              rows={ 3 }
+              rowsMax={ 6 }
+              variant="filled"
+              fullWidth
+              autoFocus
+              helperText={ errors.name }
+              error={ !!errors.name.trim() }
             />
-            : null
-          }
 
-          <AddPostButton
-            variant="contained"
-            color="secondary"
-            type="submit"
-          >
-            Create thread
-          </AddPostButton>
-        </CardContent>
-      </Card>
-    </form>
+            <TextField
+              value={ newThread.post_body }
+              onChange={ handleChange(NewThreadChange.PostBody) }
+              id="standard-multiline-static"
+              label="Body"
+              multiline
+              rows={ 3 }
+              rowsMax={ 6 }
+              variant="filled"
+              fullWidth
+              helperText={ errors.post_body }
+              error={ !!errors.post_body.trim() }
+            />
+
+            { currentUser.role === Role.Admin
+              ? <PinnedCheckbox
+                value={ newThread.pinned }
+                control={ <Checkbox color="primary" onChange={ handleChange(NewThreadChange.Pinned) } /> }
+                label="Pin the thread"
+                labelPlacement="end"
+              />
+              : null
+            }
+
+            <AddPostButton
+              variant="contained"
+              color="secondary"
+              type="submit"
+            >
+              Create thread
+            </AddPostButton>
+          </CardContent>
+        </Card>
+      </form>
+    </>
   );
 }
 

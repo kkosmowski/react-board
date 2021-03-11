@@ -23,7 +23,7 @@ interface SessionContextProps {
 const initialSession = {
   persisted: false,
   token: '',
-  username: '',
+  email: '',
 };
 
 const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
@@ -34,7 +34,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
   const [currentUser, setCurrentUser] = useState<User>(initialUser);
 
   useEffect(() => {
-    if (session.token && session.username) {
+    if (session.token && session.email) {
       setLogged(true);
       SessionUtil.setSession(session);
     } else {
@@ -56,7 +56,8 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
         .then((data: MeResponse) => {
           setCurrentUser({
             id: '1',
-            username: session.username,
+            username: data.username,
+            email: session.email,
             role: data.role
           });
         });
@@ -65,7 +66,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
 
   const createAccount = (form: RegisterForm): Promise<void> => {
     return HttpService
-      .post<RegisterForm>(endpoint.register, form)
+      .post<RegisterForm>(endpoint.register, form);
   };
 
   const createSession = (form: LoginForm): Promise<void> => {
@@ -74,7 +75,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
       .then(({ token }: LoginResponse) => {
         setSession({
           token,
-          username: form.username,
+          email: form.username,
           persisted: form.remember,
         });
       });
@@ -112,6 +113,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
 
 const initialUser: User = {
   id: '',
+  email: '',
   role: null,
   username: '',
 };
@@ -124,7 +126,7 @@ const initialData: SessionContextProps = {
   logged: null,
   logout: () => ({}),
   session: {
-    username: '',
+    email: '',
     token: '',
     persisted: false,
   },

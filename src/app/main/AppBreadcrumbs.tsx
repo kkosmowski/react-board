@@ -94,7 +94,7 @@ export function AppBreadcrumbs(): ReactElement {
   return (
     <TheBreadcrumbs
       separator={ <NavigateNext fontSize="small" /> }
-      className="breadcrumbs container"
+      className="breadcrumbs root-container"
     >
       { renderBreadcrumbs() }
     </TheBreadcrumbs>

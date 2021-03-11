@@ -3,7 +3,7 @@ import { LoginPanel } from './LoginPanel';
 import { useContext, useEffect } from 'react';
 import { SessionContext } from '@contexts';
 import { LoginForm, RegisterForm } from '@interfaces';
-import { Route, useHistory, useRouteMatch } from 'react-router-dom';
+import { Redirect, Route, useHistory, useRouteMatch } from 'react-router-dom';
 import { RegisterPanel } from './RegisterPanel';
 
 export function Auth() {
@@ -37,6 +37,9 @@ export function Auth() {
       </Route>
       <Route path={ `${ url }/register` }>
         <RegisterPanel onRegister={ handleRegister } />
+      </Route>
+      <Route path="*">
+        <Redirect to={ `${ url }/login` } />
       </Route>
     </AuthWrapper>
   );
