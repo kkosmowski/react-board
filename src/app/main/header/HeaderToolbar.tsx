@@ -26,9 +26,11 @@ export function HeaderToolbar(): ReactElement {
           </Typography>
         </ToolbarPart>
         <ToolbarPart data-right>
-          { logged
-            ? <LoggedUser user={ currentUser } onLogout={ logout } />
-            : <HeaderLoginLinks />
+          { typeof logged === 'boolean'
+            ? logged
+              ? <LoggedUser user={ currentUser } onLogout={ logout } />
+              : <HeaderLoginLinks />
+            : null
           }
         </ToolbarPart>
       </StyledToolbar>

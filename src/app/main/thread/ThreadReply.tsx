@@ -2,7 +2,6 @@ import { Button, Card, CardContent, TextField } from '@material-ui/core';
 import React, { ChangeEvent, useState } from 'react';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
-import { AppBreadcrumbs, BackButton } from '@main';
 
 interface ThreadReplyProps {
   onAddReply: (replyBody: string) => Promise<any>;

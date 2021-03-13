@@ -4,7 +4,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import { DataProvider, SessionProvider } from '@contexts';
 import { BrowserRouter, Redirect, Route } from 'react-router-dom';
 import { Shell } from '@main';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
+import { unstable_createMuiStrictModeTheme as createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import React from 'react';
 
 function App(): ReactElement {
