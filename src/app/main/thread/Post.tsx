@@ -1,16 +1,18 @@
-import { ReactElement } from 'react';
+import { ReactElement, useContext } from 'react';
 import { PostModel } from '@models';
 import { Link as RouterLink } from 'react-router-dom';
 import { DateFormat } from '@enums';
 import { TimeUtil } from '@utils';
 import styled from 'styled-components';
-import { Card, CardContent } from '@material-ui/core';
+import { Button, Card, CardContent } from '@material-ui/core';
+import { SessionContext } from '@contexts';
 
 interface PostProps {
   post: PostModel;
 }
 
 export function Post({ post }: PostProps): ReactElement {
+  const { currentUser } = useContext(SessionContext);
   return (
     <PostCard>
       <PostCardContent>
@@ -24,6 +26,11 @@ export function Post({ post }: PostProps): ReactElement {
             </RouterLink>
           </address>
           <time dateTime={ post.created_on }>{ TimeUtil.format(post.created_on, DateFormat.DateWithTime) }</time>
+          {
+            currentUser.id === post.created_by.id
+              ? <Button>Edit</Button>
+              : null
+          }
         </PostDetails>
         <PostBody>
           { post.body }

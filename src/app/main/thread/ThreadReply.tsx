@@ -12,6 +12,7 @@ export function ThreadReply({ onAddReply, logged }: ThreadReplyProps): ReactElem
   const [replyBody, setReplyBody] = useState('');
   const [replyError, setReplyError] = useState(' ');
 
+  // TODO: After backend refactor adjustments make sure this works
   const handleAddReply = () => {
     if (logged) {
       if (replyBody.trim()) {
