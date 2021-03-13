@@ -13,6 +13,7 @@ const aliasMap = {
   '@main/profile': 'src/app/main/profile',
   '@main/thread': 'src/app/main/thread',
   '@models': 'src/app/domain/models',
+  '@payloads': 'src/app/domain/payloads',
   '@responses': 'src/app/domain/responses',
   '@services': 'src/app/services',
   '@utils': 'src/app/utils',

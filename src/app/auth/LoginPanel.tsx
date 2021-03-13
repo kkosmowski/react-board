@@ -14,20 +14,31 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { LoginForm } from '@interfaces';
 import { AuthPanel } from './AuthPanel';
 import { useHistory } from 'react-router-dom';
+import { Validate } from '@utils';
 
 interface LoginPanelProps {
   onLogin: (form: LoginForm) => void;
+  error: string;
 }
 
-export function LoginPanel({ onLogin }: LoginPanelProps): ReactElement {
+type LoginErrors = Omit<LoginForm, 'remember'>;
+
+export function LoginPanel({ onLogin, error }: LoginPanelProps): ReactElement {
   const history = useHistory();
+  const initialErrors: LoginErrors = {
+    email: ' ',
+    password: ' ',
+  };
+
   const [form, setForm] = useState<LoginForm>({
-    username: '',
+    email: '',
     password: '',
-    remember: false
+    remember: false,
   });
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [errors, setErrors] = useState(initialErrors);
+  const [formValid, setFormValid] = useState(false);
 
   const handleChange = (change: keyof LoginForm) => (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -49,9 +60,23 @@ export function LoginPanel({ onLogin }: LoginPanelProps): ReactElement {
     });
   };
 
+  const validateControl = (control: keyof LoginErrors) => (event: FormEvent) => {
+    event.preventDefault();
+
+    setErrors({
+      ...errors,
+      [control]: Validate.control(control, form[control]),
+    });
+
+    setFormValid(Object.values(errors).every((error: string) => !error.trim()));
+  };
+
   const handleLogin = (event: FormEvent) => {
     event.preventDefault();
-    onLogin(form);
+
+    if (formValid) {
+      onLogin(form);
+    }
   };
 
   return (
@@ -60,23 +85,25 @@ export function LoginPanel({ onLogin }: LoginPanelProps): ReactElement {
         <>
           <Typography variant="h6" component="span">Login</Typography>
 
-          <FormControl>
+          <FormControl error={ !!errors.email.trim() }>
             <InputLabel htmlFor="login-email">Email</InputLabel>
             <Input
               id="login-email"
-              value={ form.username }
-              onChange={ handleChange('username') }
+              value={ form.email }
+              onChange={ handleChange('email') }
+              onBlur={ validateControl('email') }
             />
-            <FormHelperText> </FormHelperText>
+            <FormHelperText>{ errors.email }</FormHelperText>
           </FormControl>
 
-          <FormControl>
+          <FormControl error={ !!errors.password.trim() }>
             <InputLabel htmlFor="login-password">Password</InputLabel>
             <Input
               id="login-password"
               value={ form.password }
               type={ showPassword ? 'text' : 'password' }
               onChange={ handleChange('password') }
+              onBlur={ validateControl('password') }
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -88,7 +115,7 @@ export function LoginPanel({ onLogin }: LoginPanelProps): ReactElement {
                 </InputAdornment>
               }
             />
-            <FormHelperText> </FormHelperText>
+            <FormHelperText>{ errors.password }</FormHelperText>
           </FormControl>
 
           <FormControlLabel
@@ -97,6 +124,7 @@ export function LoginPanel({ onLogin }: LoginPanelProps): ReactElement {
             label="Remember me"
             labelPlacement="end"
           />
+          <ErrorText error>{ error }</ErrorText>
         </>
         <>
           <Button
@@ -124,4 +152,9 @@ const GrayButton = styled(Button)`
   && {
     background-color: #aaa;
   }
+`;
+
+const ErrorText = styled(FormHelperText)`
+  width: 100%;
+  text-align: center;
 `;

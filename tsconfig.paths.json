@@ -38,6 +38,9 @@
       "@models": [
         "src/app/domain/models"
       ],
+      "@payloads": [
+        "src/app/domain/payloads"
+      ],
       "@responses": [
         "src/app/domain/responses"
       ],

@@ -2,8 +2,10 @@ import { createContext, ReactElement, useEffect, useState } from 'react';
 import { LoginForm, RegisterForm, Session } from '@interfaces';
 import { endpoint, endpointWithProp, SessionUtil } from '@utils';
 import { HttpService } from '@services';
-import { LoginResponse, MeResponse } from '@responses';
-import { User } from '@models';
+import { LoginFailResponse, LoginResponse, MeResponse } from '@responses';
+import { CurrentUser } from '@models';
+import { Result } from '../domain/interfaces/result.interface';
+import { LoginPayload } from '@payloads';
 
 interface SessionProviderProps {
   children: ReactElement | ReactElement[];
@@ -11,13 +13,13 @@ interface SessionProviderProps {
 
 interface SessionContextProps {
   createAccount: (form: RegisterForm) => Promise<void>;
-  createSession: (form: LoginForm) => Promise<void>;
-  currentUser: User;
+  createSession: (form: LoginForm) => Promise<Result<LoginResponse | LoginFailResponse>>
+  currentUser: CurrentUser;
   getCurrentUser: (userId: string) => void;
   logged: boolean | null;
   logout: () => void;
   session: Session;
-  setCurrentUser: (user: User) => User;
+  setCurrentUser: (user: CurrentUser) => CurrentUser;
 }
 
 const initialSession = {
@@ -31,7 +33,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
 
   const [session, setSession] = useState<Session>(initialSession);
   const [logged, setLogged] = useState<boolean | null>(null);
-  const [currentUser, setCurrentUser] = useState<User>(initialUser);
+  const [currentUser, setCurrentUser] = useState<CurrentUser>(initialCurrentUser);
 
   useEffect(() => {
     if (session.token && session.email) {
@@ -69,14 +71,23 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
       .post<RegisterForm>(endpoint.register, form);
   };
 
-  const createSession = (form: LoginForm): Promise<void> => {
+  const createSession = (form: LoginForm): Promise<Result<LoginResponse | LoginFailResponse>> => {
     return HttpService
-      .post<LoginForm>(endpoint.login, form)
-      .then(({ token }: LoginResponse) => {
-        setSession({
-          token,
-          email: form.username,
-          persisted: form.remember,
+      .post<LoginPayload>(endpoint.login, {
+        username: form.email,
+        password: form.password,
+      })
+      .then((response: LoginResponse) => {
+        if (response.token) {
+          setSession({
+            token: response.token,
+            email: form.email,
+            persisted: form.remember,
+          });
+        }
+        return ({
+          success: !!response.token,
+          payload: response,
         });
       });
   };
@@ -85,10 +96,10 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
     if (session.token) {
       HttpService
         .get(endpointWithProp.user(userId), session.token)
-        .then((user: Partial<User>) => ({
+        .then((user: Partial<CurrentUser>) => ({
           ...user,
           id: userId,
-        }) as User)
+        }) as CurrentUser)
         .then(setCurrentUser);
     }
   };
@@ -111,17 +122,17 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
   );
 };
 
-const initialUser: User = {
+const initialCurrentUser: CurrentUser = {
   id: '',
   email: '',
-  role: null,
   username: '',
+  role: null,
 };
 
 const initialData: SessionContextProps = {
   createAccount: (form: RegisterForm) => Promise.resolve(),
-  createSession: (form: LoginForm) => Promise.resolve(),
-  currentUser: initialUser,
+  createSession: (form: LoginForm) => Promise.resolve({ success: false, payload: {} }),
+  currentUser: initialCurrentUser,
   getCurrentUser: (userId: string) => ({}),
   logged: null,
   logout: () => ({}),
@@ -130,7 +141,7 @@ const initialData: SessionContextProps = {
     token: '',
     persisted: false,
   },
-  setCurrentUser: (initialUser: User) => initialUser,
+  setCurrentUser: (initialUser: CurrentUser) => initialUser,
 };
 
 const SessionContext = createContext<SessionContextProps>(initialData);

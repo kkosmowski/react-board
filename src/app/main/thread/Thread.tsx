@@ -1,15 +1,16 @@
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import { DataContext, SessionContext } from '@contexts';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { PostModel } from '@models';
 import { Post } from './Post';
 import { Button, Typography } from '@material-ui/core';
 import './Thread.scss';
 import { ThreadReply } from './ThreadReply';
 import { ThreadRouteParams } from '@interfaces';
-import { AppBreadcrumbs, BackButton } from '@main';
+import { BackButton } from '@main';
 
 export function Thread(): ReactElement {
+  const history = useHistory();
   const { categoryId, threadId } = useParams<ThreadRouteParams>();
   const { logged } = useContext(SessionContext);
   const {
@@ -57,12 +58,16 @@ export function Thread(): ReactElement {
   useEffect(() => clearThread, []);
 
   const handleReplyClick = () => {
-    setReplyVisible(true);
-    setTimeout(() => {
-      mainElement.current.scrollTo(0, mainElement.current.scrollHeight);
-    }, 0);
+    if (logged) {
+      setReplyVisible(true);
+      setTimeout(() => {
+        mainElement.current.scrollTo(0, mainElement.current.scrollHeight);
+      }, 0);
+    } else {
+      history.push('/auth/login');
+    }
   };
-
+  // TODO: Add post edit if created_by.id === currentUser.id
   const createReplyButton = (): ReactElement => (
     <div>
       <Button

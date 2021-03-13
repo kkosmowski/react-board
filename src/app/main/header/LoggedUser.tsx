@@ -1,11 +1,11 @@
-import { User } from '@models';
+import { CurrentUser } from '@models';
 import { ReactElement, MouseEvent, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Menu, MenuItem } from '@material-ui/core';
 import styled from 'styled-components';
 
 interface LoggedUserProps {
-  user: User;
+  user: CurrentUser;
   onLogout: () => void;
 }
 

@@ -189,7 +189,10 @@ const initialUser: User = {
   id: '',
   email: '',
   username: '',
-  role: null,
+  date_joined: '',
+  last_login: '',
+  // role: null,
+  post_count: NaN,
 };
 
 const initialThread: ThreadListItemModel = {

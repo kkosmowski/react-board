@@ -14,6 +14,7 @@ import {
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
+import { Validate } from '@utils';
 
 interface RegisterPanelProps {
   onRegister: (form: RegisterForm) => void;
@@ -55,96 +56,21 @@ export function RegisterPanel({ onRegister }: RegisterPanelProps): ReactElement 
 
   const validateControl = (control: keyof RegisterForm) => (event: FormEvent) => {
     event.preventDefault();
-    if (!form[control].trim()) {
+    if (control === 'repeatPassword') {
+      const { password, repeatPassword } = Validate.repeatPassword(form.password, form.repeatPassword);
       setErrors({
         ...errors,
-        [control]: 'Field cannot be empty',
+        password: password ? password : errors.password,
+        repeatPassword,
       });
     } else {
       setErrors({
         ...errors,
-        [control]: initialErrors[control],
+        [control]: Validate.control(control, form[control]),
       });
-
-      let _errors = initialErrors;
-
-      switch (control) {
-        case 'email':
-          if (!form.email.match(/([\w\d\.]{2,}@[\w\d]{2,}\.[\w]{2,})/)) {
-            _errors = {
-              ..._errors,
-              email: 'Invalid email address.',
-            };
-          } else {
-            _errors = {
-              ..._errors,
-              [control]: initialErrors[control],
-            };
-          }
-          break;
-        case 'username':
-          if (form.username.length <= 1) {
-            _errors = {
-              ..._errors,
-              username: 'Username must be at least 2 characters.',
-            };
-
-          } else if (form.username.length > 20) {
-            _errors = {
-              ..._errors,
-              username: 'Username is too long.',
-            };
-          } else {
-            _errors = {
-              ..._errors,
-              [control]: initialErrors[control],
-            };
-          }
-          break;
-        // @ts-ignore
-        case 'password':
-          if (form.password.length < 5) {
-            _errors = {
-              ..._errors,
-              password: 'Minimum password length is 5 characters',
-            };
-          } else if (form.password.length > 20) {
-            _errors = {
-              ..._errors,
-              password: 'Password is too long.',
-            };
-          } else {
-            _errors = {
-              ..._errors,
-              [control]: initialErrors[control],
-            };
-          }
-        // INFO: The fallthrough here is on purpose
-        // eslint-disable-next-line no-fallthrough
-        case 'repeatPassword':
-          if (form.repeatPassword !== form.password && form.password && form.repeatPassword) {
-            _errors = {
-              ..._errors,
-              password: 'Passwords are not identical',
-              repeatPassword: 'Passwords are not identical',
-            };
-          } else {
-            _errors = {
-              ..._errors,
-              password: initialErrors.password,
-              repeatPassword: initialErrors.repeatPassword,
-            };
-          }
-          break;
-      }
-
-      setErrors(_errors);
-      if (Object.values(_errors).every((error: string) => !error.trim())) {
-        setFormValid(true);
-      } else {
-        setFormValid(false);
-      }
     }
+
+    setFormValid(Object.values(errors).every((error: string) => !error.trim()));
   };
 
   const handleRegister = (event: FormEvent) => {
