@@ -15,11 +15,7 @@ import { Role } from '@enums';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import { BackButton } from '@main';
 
-enum NewThreadChange {
-  Name = 'name',
-  Pinned = 'pinned',
-  PostBody = 'post_body'
-}
+type NewThreadErrors = Omit<NewThread, 'pinned'>;
 
 export function CreateThread(): ReactElement {
   const history = useHistory();
@@ -28,17 +24,19 @@ export function CreateThread(): ReactElement {
   const { currentUser } = useContext(SessionContext);
   const { category, createThread, getCategory } = useContext(DataContext);
 
+  const initialErrors: NewThreadErrors = {
+    name: ' ',
+    post_body: ' ',
+  };
+
   const [newThread, setNewThread] = useState<NewThread>({
     name: '',
     pinned: false,
     post_body: '',
   });
 
-  const initialErrors = {
-    name: ' ',
-    post_body: ' ',
-  };
   const [errors, setErrors] = useState(initialErrors);
+  const [formValid, setFormValid] = useState(false);
 
   useEffect(() => {
     if (categoryId) {
@@ -46,40 +44,45 @@ export function CreateThread(): ReactElement {
     }
   }, [categoryId]);
 
-  const handleChange = (change: NewThreadChange) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (change: keyof NewThread) => (event: ChangeEvent<HTMLInputElement>) => {
     setNewThread({
       ...newThread,
       [change]: event.target.value,
-    } as NewThread);
+    });
 
     setErrors({
       ...errors,
       [change]: ' ',
     });
+
+    validateForm();
+  };
+
+  const validateForm = () => {
+    const _errors = { ...initialErrors };
+
+    if (!newThread.name.trim()) {
+      _errors.name = 'Thread name cannot be empty.';
+    }
+
+    if (!newThread.post_body.trim()) {
+      _errors.post_body = 'Thread body cannot be empty.';
+    }
+
+    setErrors(_errors);
+    setFormValid(Object.values(_errors).every((error: string) => !error.trim()));
   };
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     event.stopPropagation();
-    const _errors = initialErrors;
-    let formValid = true;
 
-    if (!newThread.name.trim()) {
-      _errors.name = 'Thread name cannot be empty.';
-      formValid = false;
-    }
-
-    if (!newThread.post_body.trim()) {
-      _errors.post_body = 'Thread body cannot be empty.';
-      formValid = false;
-    }
+    validateForm();
 
     if (formValid) {
       createThread(newThread).then(() => {
         history.push(url.split('/').slice(0, -1).join('/'));
       });
-    } else {
-      setErrors(_errors);
     }
   };
 
@@ -92,7 +95,8 @@ export function CreateThread(): ReactElement {
             <CreateThreadTitle variant="h5">Create new thread in { category.name }</CreateThreadTitle>
             <TextField
               value={ newThread.name }
-              onChange={ handleChange(NewThreadChange.Name) }
+              onChange={ handleChange('name') }
+              onBlur={ validateForm }
               id="standard-multiline-static"
               label="Name"
               rows={ 3 }
@@ -106,7 +110,8 @@ export function CreateThread(): ReactElement {
 
             <TextField
               value={ newThread.post_body }
-              onChange={ handleChange(NewThreadChange.PostBody) }
+              onChange={ handleChange('post_body') }
+              onBlur={ validateForm }
               id="standard-multiline-static"
               label="Body"
               multiline
@@ -121,7 +126,7 @@ export function CreateThread(): ReactElement {
             { currentUser.role === Role.Admin
               ? <PinnedCheckbox
                 value={ newThread.pinned }
-                control={ <Checkbox color="primary" onChange={ handleChange(NewThreadChange.Pinned) } /> }
+                control={ <Checkbox color="primary" onChange={ handleChange('pinned') } /> }
                 label="Pin the thread"
                 labelPlacement="end"
               />
