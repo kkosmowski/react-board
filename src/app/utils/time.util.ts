@@ -10,6 +10,8 @@ export class TimeUtil {
       case DateFormat.DateWithTime:
         return zero(date.getDate()) + '.' + zero(date.getMonth()) + '.' + date.getFullYear()
           + ', ' + zero(date.getHours()) + ':' + zero(date.getMinutes());
+      case DateFormat.Date:
+        return zero(date.getDate()) + '.' + zero(date.getMonth()) + '.' + date.getFullYear();
       default:
         return time;
     }

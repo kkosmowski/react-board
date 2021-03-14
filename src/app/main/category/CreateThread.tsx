@@ -12,14 +12,13 @@ import styled from 'styled-components';
 import { CategoryRouteParams, NewThread } from '@interfaces';
 import { DataContext, SessionContext } from '@contexts';
 import { Role } from '@enums';
-import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { BackButton } from '@main';
 
-type NewThreadErrors = Omit<NewThread, 'pinned'>;
+type NewThreadErrors = Omit<NewThread, 'category_id' | 'pinned'>;
 
 export function CreateThread(): ReactElement {
   const history = useHistory();
-  const { url } = useRouteMatch();
   const { categoryId } = useParams<CategoryRouteParams>();
   const { currentUser } = useContext(SessionContext);
   const { category, createThread, getCategory } = useContext(DataContext);
@@ -30,6 +29,7 @@ export function CreateThread(): ReactElement {
   };
 
   const [newThread, setNewThread] = useState<NewThread>({
+    category_id: parseInt(categoryId),
     name: '',
     pinned: false,
     post_body: '',
@@ -40,14 +40,16 @@ export function CreateThread(): ReactElement {
 
   useEffect(() => {
     if (categoryId) {
-      getCategory(categoryId);
+      getCategory(parseInt(categoryId));
     }
   }, [categoryId]);
 
   const handleChange = (change: keyof NewThread) => (event: ChangeEvent<HTMLInputElement>) => {
+    const input = event.target;
+
     setNewThread({
       ...newThread,
-      [change]: event.target.value,
+      [change]: input.type === 'checkbox' ? input.checked : input.value,
     });
 
     setErrors({
@@ -81,7 +83,7 @@ export function CreateThread(): ReactElement {
 
     if (formValid) {
       createThread(newThread).then(() => {
-        history.push(url.split('/').slice(0, -1).join('/'));
+        history.push(`/home/category/${ categoryId }`);
       });
     }
   };

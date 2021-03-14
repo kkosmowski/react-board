@@ -1,5 +1,3 @@
-import { CategoryRouteParams } from './category-route-params.interface';
-
-export interface ThreadRouteParams extends CategoryRouteParams {
+export interface ThreadRouteParams {
   threadId: string;
 }

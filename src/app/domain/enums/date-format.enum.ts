@@ -1,3 +1,4 @@
 export enum DateFormat {
-  DateWithTime = 'date-with-time'
+  DateWithTime = 'date-with-time',
+  Date = 'date',
 }

@@ -2,7 +2,7 @@ import { ThreadListItemModel } from '@models';
 import React, { ReactElement } from 'react';
 import { Divider, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { Folder } from '@material-ui/icons';
-import { Link as RouterLink, useRouteMatch } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface ThreadListItemProps {
@@ -10,12 +10,10 @@ interface ThreadListItemProps {
 }
 
 export function ThreadListItem({ thread }: ThreadListItemProps): ReactElement {
-  const match = useRouteMatch();
   const postBody: string = thread.last_post.body;
   const slicedPostBody: string = postBody.length > 10
     ? postBody.slice(0, 10) + '...'
     : postBody;
-
 
   return (
     <>
@@ -24,7 +22,7 @@ export function ThreadListItem({ thread }: ThreadListItemProps): ReactElement {
         <ListItemIcon>
           <Folder />
         </ListItemIcon>
-        <RouterLink className="thread-title" to={ match.url + '/thread/' + thread.id }>
+        <RouterLink className="thread-title" to={ '/home/thread/' + thread.id }>
           <ListItemText>{ thread.name }</ListItemText>
         </RouterLink>
         <ThreadDetails>

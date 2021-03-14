@@ -28,7 +28,7 @@ export function Shell() {
         <Route exact path={ `${ url }/category/:categoryId` }>
           <Category />
         </Route>
-        <Route exact path={ `${ url }/category/:categoryId/thread/:threadId` }>
+        <Route exact path={ `${ url }/thread/:threadId` }>
           <Thread />
         </Route>
         <RouteForLogged path={ `${ url }/users/:userId` }>

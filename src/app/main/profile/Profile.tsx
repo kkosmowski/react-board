@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import { DataContext, SessionContext } from '@contexts';
 import { ProfileRouteParams } from '@interfaces';
 import { BackButton } from '@main';
+import { TimeUtil } from '@utils';
+import { DateFormat } from '@enums';
 
 export function Profile(): ReactElement {
   const { userId } = useParams<ProfileRouteParams>();
@@ -11,8 +13,8 @@ export function Profile(): ReactElement {
   const { user, getUser } = useContext(DataContext);
 
   useEffect(() => {
-    if (logged) {
-      getUser(userId);
+    if (logged && userId) {
+      getUser(parseInt(userId));
     }
   }, [userId, logged]);
 
@@ -24,7 +26,9 @@ export function Profile(): ReactElement {
           <CardContent className="container__content">
             <p>Id: { user.id }</p>
             <p>Email: { user.email }</p>
-            <p>Username: { user.username } </p>
+            <p>Username: { user.username }</p>
+            <p>Post count: { user.post_count }</p>
+            <p>Joined at: { TimeUtil.format(user.date_joined, DateFormat.Date) }</p>
           </CardContent>
         </Card>
       </div>

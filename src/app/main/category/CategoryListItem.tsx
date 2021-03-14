@@ -24,13 +24,11 @@ export function CategoryListItem({ category }: CategoryListItemProps): ReactElem
         <CategoryRow>
           <CategoryCardMainPart>
             <Typography component="p">
-              Random category description text, Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae
-              nisl a sem efficitur faucibus. Nullam pretium libero nec diam ullamcorper cursus. Phasellus ut blandit
-              nibh, et molestie sapien. Nullam eget malesuada turpis, et blandit nulla.
+              { category.description }
             </Typography>
           </CategoryCardMainPart>
           <CategoryCardDetails>
-            ostatni post hehe
+            Threads: { category.thread_count }
           </CategoryCardDetails>
         </CategoryRow>
       </CardContent>

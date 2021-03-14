@@ -15,7 +15,7 @@ interface SessionContextProps {
   createAccount: (form: RegisterForm) => Promise<void>;
   createSession: (form: LoginForm) => Promise<Result<LoginResponse | LoginFailResponse>>
   currentUser: CurrentUser;
-  getCurrentUser: (userId: string) => void;
+  getCurrentUser: (userId: number) => void;
   logged: boolean | null;
   logout: () => void;
   session: Session;
@@ -57,7 +57,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
         .get(endpoint.me, session.token)
         .then((data: MeResponse) => {
           setCurrentUser({
-            id: '1',
+            id: data.id,
             username: data.username,
             email: session.email,
             role: data.role
@@ -92,14 +92,10 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
       });
   };
 
-  const getCurrentUser = (userId: string): void => {
+  const getCurrentUser = (userId: number): void => {
     if (session.token) {
       HttpService
         .get(endpointWithProp.user(userId), session.token)
-        .then((user: Partial<CurrentUser>) => ({
-          ...user,
-          id: userId,
-        }) as CurrentUser)
         .then(setCurrentUser);
     }
   };
@@ -123,7 +119,7 @@ const SessionProvider = ({ children }: SessionProviderProps): ReactElement => {
 };
 
 const initialCurrentUser: CurrentUser = {
-  id: '',
+  id: NaN,
   email: '',
   username: '',
   role: null,
@@ -133,7 +129,7 @@ const initialData: SessionContextProps = {
   createAccount: (form: RegisterForm) => Promise.resolve(),
   createSession: (form: LoginForm) => Promise.resolve({ success: false, payload: {} }),
   currentUser: initialCurrentUser,
-  getCurrentUser: (userId: string) => ({}),
+  getCurrentUser: (userId: number) => ({}),
   logged: null,
   logout: () => ({}),
   session: {

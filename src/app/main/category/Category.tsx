@@ -19,11 +19,11 @@ export function Category(): ReactElement {
   const { url } = useRouteMatch();
   const { categoryId } = useParams<CategoryRouteParams>();
   const { logged } = useContext(SessionContext);
-  const { category, getCategory, threads } = useContext(DataContext);
+  const { category, getCategory, threads, clearCategory } = useContext(DataContext);
   const [threadCollection, setThreadCollection] = useState<ReactElement[]>([]);
 
   useEffect(() => {
-    getCategory(categoryId);
+    getCategory(parseInt(categoryId));
   }, [categoryId]);
 
   useEffect(() => {
@@ -44,6 +44,8 @@ export function Category(): ReactElement {
       : '/auth'
     );
   };
+
+  useEffect(() => clearCategory, []);
 
   return (
     <div className="root-container">

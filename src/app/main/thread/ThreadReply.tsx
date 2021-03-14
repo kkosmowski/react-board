@@ -2,21 +2,27 @@ import { Button, Card, CardContent, TextField } from '@material-ui/core';
 import React, { ChangeEvent, useState } from 'react';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
+import { useParams } from 'react-router-dom';
+import { Reply, ThreadRouteParams } from '@interfaces';
 
 interface ThreadReplyProps {
-  onAddReply: (replyBody: string) => Promise<any>;
+  onAddReply: (reply: Reply) => Promise<any>;
   logged: boolean | null;
 }
 
 export function ThreadReply({ onAddReply, logged }: ThreadReplyProps): ReactElement {
   const [replyBody, setReplyBody] = useState('');
   const [replyError, setReplyError] = useState(' ');
+  const { threadId } = useParams<ThreadRouteParams>();
 
   // TODO: After backend refactor adjustments make sure this works
   const handleAddReply = () => {
     if (logged) {
       if (replyBody.trim()) {
-        onAddReply(replyBody).then(() => {
+        onAddReply({
+          body: replyBody,
+          thread_id: parseInt(threadId),
+        }).then(() => {
           setReplyBody(' ');
         });
       } else {

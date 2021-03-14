@@ -1,4 +1,4 @@
-import React, { ReactElement, useContext, useEffect, useState } from 'react';
+import { ReactElement, useContext, useEffect, useState } from 'react';
 import { DataContext, SessionContext } from '@contexts';
 import { useHistory, useParams } from 'react-router-dom';
 import { PostModel } from '@models';
@@ -11,32 +11,25 @@ import { BackButton } from '@main';
 
 export function Thread(): ReactElement {
   const history = useHistory();
-  const { categoryId, threadId } = useParams<ThreadRouteParams>();
+  const { threadId } = useParams<ThreadRouteParams>();
   const { logged } = useContext(SessionContext);
   const {
     addReply,
     clearThread,
-    getPosts,
     mainElement,
     posts,
     thread,
     getThread,
-    getCategory
   } = useContext(DataContext);
   const [postCollection, setPostCollection] = useState<ReactElement[]>([]);
   const [replyVisible, setReplyVisible] = useState(false);
   const [threadScrollable, setThreadScrollable] = useState(false);
 
   useEffect(() => {
-    if (categoryId) {
-      getCategory(categoryId);
-      getPosts(categoryId, threadId);
-
-      if (threadId) {
-        getThread(threadId, categoryId);
-      }
+    if (threadId) {
+      getThread(parseInt(threadId));
     }
-  }, [categoryId, threadId]);
+  }, [threadId]);
 
   useEffect(() => {
     const collection: ReactElement[] = [];
@@ -55,18 +48,19 @@ export function Thread(): ReactElement {
     }
   }, [posts]);
 
-  useEffect(() => clearThread, []);
-
   const handleReplyClick = () => {
     if (logged) {
       setReplyVisible(true);
-      setTimeout(() => {
-        mainElement.current.scrollTo(0, mainElement.current.scrollHeight);
-      }, 0);
+      if (mainElement && mainElement.current) {
+        setTimeout(() => {
+          mainElement.current.scrollTo(0, mainElement.current.scrollHeight);
+        }, 0);
+      }
     } else {
       history.push('/auth/login');
     }
   };
+
   // TODO: Add post edit if created_by.id === currentUser.id
   const createReplyButton = (): ReactElement => (
     <div>
@@ -82,13 +76,15 @@ export function Thread(): ReactElement {
     </div>
   );
 
+  useEffect(() => clearThread, []);
+
   return (
     <>
       <BackButton />
       <div className="thread root-container">
         <header className="thread__header">
           <hgroup className="thread__details">
-            <Typography variant="h4" component="h4">Thread: { thread?.name }</Typography>
+            <Typography variant="h4" component="h4">Thread: { thread.name }</Typography>
           </hgroup>
           <hgroup className="thread__controls">
             { createReplyButton() }

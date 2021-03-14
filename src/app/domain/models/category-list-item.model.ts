@@ -1,5 +1,6 @@
 export interface CategoryListItemModel {
-  id: string;
-  url: string;
+  id: number;
   name: string;
+  description: string;
+  thread_count: number;
 }
