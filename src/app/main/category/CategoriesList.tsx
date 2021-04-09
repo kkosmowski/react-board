@@ -1,9 +1,10 @@
 import React, { ReactElement, useContext, useEffect, useState } from 'react';
 import { CategoryListItemModel } from '@models';
 import { CategoryListItem } from './CategoryListItem';
-import { DataContext } from '@contexts';
+import { DataContext } from '@contexts'
+import { connect } from 'react-redux';
 
-export function CategoriesList(): ReactElement {
+function CategoriesList(): ReactElement {
   const { categories, getCategories } = useContext(DataContext);
   const [categoriesList, setCategoriesList] = useState<ReactElement[]>([]);
 
@@ -28,3 +29,5 @@ export function CategoriesList(): ReactElement {
       { categoriesList }
     </div>);
 }
+
+export default connect()(CategoriesList);

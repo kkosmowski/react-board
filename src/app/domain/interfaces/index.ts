@@ -1,3 +1,4 @@
+export * from './action.interface';
 export * from './category-route-params.interface';
 export * from './login-form.interface';
 export * from './new-thread.interface';

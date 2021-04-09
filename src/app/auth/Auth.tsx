@@ -1,40 +1,43 @@
 import styled from 'styled-components';
 import { LoginPanel } from './LoginPanel';
-import { useContext, useEffect, useState } from 'react';
-import { SessionContext } from '@contexts';
+import { useEffect, useState } from 'react';
 import { LoginForm, RegisterForm } from '@interfaces';
 import { Redirect, Route, useHistory, useRouteMatch } from 'react-router-dom';
 import { RegisterPanel } from './RegisterPanel';
-import { LoginFailResponse } from '@responses';
+import { connect } from 'react-redux';
+import { SessionState } from '../store/session-state.interface';
+import { bindActionCreators, Dispatch } from 'redux';
+import * as sessionActions from '../store/actions/session.actions';
 
-export function Auth() {
+interface AuthComponentProps {
+  logged: boolean;
+  actions: any;
+}
+
+const AuthComponent = ({ logged, actions }: AuthComponentProps) => {
   const history = useHistory();
   const { url } = useRouteMatch();
-  const { logged, createSession, createAccount } = useContext(SessionContext);
   const [loginError, setLoginError] = useState('');
 
   useEffect(() => {
+    console.log('logged', logged);
     if (logged) {
       history.goBack();
     }
-  }, []);
+  }, [logged]);
 
   const handleLogin = (form: LoginForm): void => {
-    createSession(form).then((result) => {
-      if (result.success) {
-        history.goBack();
-      } else {
-        const errors = (result.payload as LoginFailResponse).non_field_errors;
-        setLoginError(errors && errors[0] ? errors[0] : 'Unknown error occurred.');
-      }
-    });
+    actions.login(form);
+    // .then(
+    // (success: boolean) => {}
+    // );
   };
 
   const handleRegister = (form: RegisterForm): void => {
-    createAccount(form).then(() => {
-      history.push('/home');
-      // TODO: Add something more after registration is successful
-    });
+    // createAccount(form).then(() => {
+    //   history.push('/home');
+    // TODO: Add something more after registration is successful
+    // });
   };
 
   return (
@@ -50,7 +53,19 @@ export function Auth() {
       </Route>
     </AuthWrapper>
   );
-}
+};
+
+const mapStateToProps = (state: SessionState) => ({
+  logged: state.logged,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  actions: bindActionCreators(sessionActions, dispatch),
+});
+
+const Auth = connect(mapStateToProps, mapDispatchToProps)(AuthComponent);
+
+export { Auth };
 
 const AuthWrapper = styled.div`
   height: 100%;
