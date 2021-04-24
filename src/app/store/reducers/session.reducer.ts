@@ -1,9 +1,9 @@
-import { SessionActions } from '../action-types.enum';
+import { SessionActions } from '@store/actions';
 import { AnyAction } from 'redux';
-import { SessionState } from '../session-state.interface';
+import { SessionState } from '@interfaces';
 
 const initialState: SessionState = {
-  logged: false,
+  logged: null,
   loginInProgress: false,
   session: null,
   currentUser: null,
@@ -11,7 +11,7 @@ const initialState: SessionState = {
 };
 
 // todo: change AnyAction
-export default function session(state = initialState, action: AnyAction) {
+export default function session(state = initialState, action: AnyAction): SessionState {
   switch (action.type) {
     case SessionActions.LOGIN: {
       return {
@@ -50,6 +50,13 @@ export default function session(state = initialState, action: AnyAction) {
       return {
         ...state,
         currentUserLoading: true,
+      };
+    }
+
+    case SessionActions.NO_SESSION_FOUND: {
+      return {
+        ...state,
+        logged: false,
       };
     }
 

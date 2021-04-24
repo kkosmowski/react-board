@@ -11,17 +11,17 @@ import {
 } from '@material-ui/core';
 import styled from 'styled-components';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { LoginForm } from '@interfaces';
+import { LoginFormData } from '@interfaces';
 import { AuthPanel } from './AuthPanel';
 import { useHistory } from 'react-router-dom';
 import { Validate } from '@utils';
 
 interface LoginPanelProps {
-  onLogin: (form: LoginForm) => void;
+  onLogin: (form: LoginFormData) => void;
   error: string;
 }
 
-type LoginErrors = Omit<LoginForm, 'remember'>;
+type LoginErrors = Omit<LoginFormData, 'remember'>;
 
 export function LoginPanel({ onLogin, error }: LoginPanelProps): ReactElement {
   const history = useHistory();
@@ -30,7 +30,7 @@ export function LoginPanel({ onLogin, error }: LoginPanelProps): ReactElement {
     password: ' ',
   };
 
-  const [form, setForm] = useState<LoginForm>({
+  const [form, setForm] = useState<LoginFormData>({
     email: '',
     password: '',
     remember: false,
@@ -40,7 +40,7 @@ export function LoginPanel({ onLogin, error }: LoginPanelProps): ReactElement {
   const [errors, setErrors] = useState(initialErrors);
   const [formValid, setFormValid] = useState(false);
 
-  const handleChange = (change: keyof LoginForm) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (change: keyof LoginFormData) => (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
 
     setForm({

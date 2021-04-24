@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, ReactElement, useState } from 'react';
-import { RegisterForm } from '@interfaces';
+import { RegisterFormData } from '@interfaces';
 import { AuthPanel } from './AuthPanel';
 import {
   Button,
@@ -17,7 +17,7 @@ import { useHistory } from 'react-router-dom';
 import { Validate } from '@utils';
 
 interface RegisterPanelProps {
-  onRegister: (form: RegisterForm) => void;
+  onRegister: (form: RegisterFormData) => void;
 }
 
 // TODO: Try to refactor in the future since RegisterPanel and LoginPanel use a lot of common logic
@@ -41,7 +41,7 @@ export function RegisterPanel({ onRegister }: RegisterPanelProps): ReactElement 
   const [formValid, setFormValid] = useState(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const handleChange = (change: keyof RegisterForm) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (change: keyof RegisterFormData) => (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
 
     setForm({
@@ -54,7 +54,7 @@ export function RegisterPanel({ onRegister }: RegisterPanelProps): ReactElement 
     setShowPassword(!showPassword);
   };
 
-  const validateControl = (control: keyof RegisterForm) => (event: FormEvent) => {
+  const validateControl = (control: keyof RegisterFormData) => (event: FormEvent) => {
     event.preventDefault();
     if (control === 'repeatPassword') {
       const { password, repeatPassword } = Validate.repeatPassword(form.password, form.repeatPassword);

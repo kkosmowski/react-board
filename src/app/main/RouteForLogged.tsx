@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
-import { SessionContext } from '@contexts';
 
-export function RouteForLogged({ path, children }: RouteProps) {
-  const { logged } = useContext(SessionContext);
+interface RouteForLoggedProps extends RouteProps {
+  logged: boolean | null;
+}
 
+export function RouteForLogged({ path, children, logged }: RouteForLoggedProps) {
   return (
     <Route path={ path }>
       { logged
