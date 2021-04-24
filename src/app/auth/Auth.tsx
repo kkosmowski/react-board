@@ -5,14 +5,16 @@ import { LoginForm, RegisterForm } from '@interfaces';
 import { Redirect, Route, useHistory, useRouteMatch } from 'react-router-dom';
 import { RegisterPanel } from './RegisterPanel';
 import { connect } from 'react-redux';
-import { SessionState } from '../store/session-state.interface';
 import { bindActionCreators, Dispatch } from 'redux';
 import * as sessionActions from '../store/actions/session.actions';
+import { MainStore } from '../store/main-store.interface';
+import { SessionState } from '@store';
 
-interface AuthComponentProps {
-  logged: boolean;
+interface MergedProps extends SessionState {
   actions: any;
 }
+
+type AuthComponentProps = Pick<MergedProps, 'logged' | 'actions'>;
 
 const AuthComponent = ({ logged, actions }: AuthComponentProps) => {
   const history = useHistory();
@@ -20,7 +22,6 @@ const AuthComponent = ({ logged, actions }: AuthComponentProps) => {
   const [loginError, setLoginError] = useState('');
 
   useEffect(() => {
-    console.log('logged', logged);
     if (logged) {
       history.goBack();
     }
@@ -28,9 +29,6 @@ const AuthComponent = ({ logged, actions }: AuthComponentProps) => {
 
   const handleLogin = (form: LoginForm): void => {
     actions.login(form);
-    // .then(
-    // (success: boolean) => {}
-    // );
   };
 
   const handleRegister = (form: RegisterForm): void => {
@@ -55,8 +53,8 @@ const AuthComponent = ({ logged, actions }: AuthComponentProps) => {
   );
 };
 
-const mapStateToProps = (state: SessionState) => ({
-  logged: state.logged,
+const mapStateToProps = ({ session }: MainStore) => ({
+  logged: session.logged,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
