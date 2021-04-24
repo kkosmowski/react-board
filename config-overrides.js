@@ -16,6 +16,10 @@ const aliasMap = {
   '@payloads': 'src/app/domain/payloads',
   '@responses': 'src/app/domain/responses',
   '@services': 'src/app/services',
+  '@store': 'src/app/store',
+  '@store/actions': 'src/app/store/actions',
+  '@store/reducers': 'src/app/store/reducers',
+  '@types': 'src/app/domain/types',
   '@utils': 'src/app/utils',
 }
 
