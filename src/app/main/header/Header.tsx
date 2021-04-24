@@ -1,9 +1,8 @@
-import { ReactElement, useEffect } from 'react';
+import { ReactElement } from 'react';
 import { HeaderLogo } from './HeaderLogo';
 import { HeaderToolbar } from './HeaderToolbar';
-import { MainStore } from '../../store/main-store.interface';
+import { MainStore, SessionState } from '@interfaces';
 import { connect } from 'react-redux';
-import { SessionState } from '@store';
 import * as sessionActions from '../../store/actions/session.actions';
 import { bindActionCreators, Dispatch } from 'redux';
 
@@ -14,10 +13,6 @@ interface MergedProps extends SessionState {
 type HeaderComponentProps = Pick<MergedProps, 'logged' | 'currentUser' | 'actions'>
 
 export function HeaderComponent({ logged, currentUser, actions }: HeaderComponentProps): ReactElement {
-
-  useEffect(() => {
-    console.log('headerComp', currentUser);
-  }, [currentUser]);
   const onLogout = () => {
     actions.logout();
   };

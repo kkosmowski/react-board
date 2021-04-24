@@ -1,18 +1,26 @@
 import { ReactElement, useContext, useEffect, useState } from 'react';
-import { DataContext, SessionContext } from '@contexts';
+import { DataContext } from '@contexts';
 import { useHistory, useParams } from 'react-router-dom';
 import { PostModel } from '@models';
 import { Post } from './Post';
 import { Button, Typography } from '@material-ui/core';
 import './Thread.scss';
 import { ThreadReply } from './ThreadReply';
-import { ThreadRouteParams } from '@interfaces';
+import { MainStore, SessionState, ThreadRouteParams } from '@interfaces';
 import { BackButton } from '@main';
+import { bindActionCreators, Dispatch } from 'redux';
+import * as sessionActions from '../../store/actions/session.actions';
+import { connect } from 'react-redux';
 
-export function Thread(): ReactElement {
+interface MergedProps extends SessionState {
+  actions: any;
+}
+
+type ThreadComponentProps = Pick<MergedProps, 'logged' | 'actions'>;
+
+function ThreadComponent({ logged }: ThreadComponentProps): ReactElement {
   const history = useHistory();
   const { threadId } = useParams<ThreadRouteParams>();
-  const { logged } = useContext(SessionContext);
   const {
     addReply,
     clearThread,
@@ -101,3 +109,15 @@ export function Thread(): ReactElement {
     </>
   );
 }
+
+const mapStateToProps = ({ session }: MainStore) => ({
+  logged: session.logged,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  actions: bindActionCreators(sessionActions, dispatch),
+});
+
+const Thread = connect(mapStateToProps, mapDispatchToProps)(ThreadComponent);
+
+export { Thread };

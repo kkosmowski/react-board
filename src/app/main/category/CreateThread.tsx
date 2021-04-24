@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import styled from 'styled-components';
 import { CategoryRouteParams, NewThread } from '@interfaces';
-import { DataContext, SessionContext } from '@contexts';
+import { DataContext } from '@contexts';
 import { Role } from '@enums';
 import { useHistory, useParams } from 'react-router-dom';
 import { BackButton } from '@main';
@@ -20,6 +20,7 @@ type NewThreadErrors = Omit<NewThread, 'category_id' | 'pinned'>;
 export function CreateThread(): ReactElement {
   const history = useHistory();
   const { categoryId } = useParams<CategoryRouteParams>();
+  // pass Store to Category comp and then pass the currentUser to this presentational component
   const { currentUser } = useContext(SessionContext);
   const { category, createThread, getCategory } = useContext(DataContext);
 

@@ -8,7 +8,11 @@ import { DataContext } from '@contexts';
 import { AppBreadcrumbs } from './AppBreadcrumbs';
 import { RouteForLogged } from './RouteForLogged';
 
-export function Shell() {
+interface ShellProps {
+  logged: boolean | null;
+}
+
+export function Shell({ logged }: ShellProps) {
   const { url } = useRouteMatch();
   const { setMainElement } = useContext(DataContext);
   const mainElement = useRef(document.body);
@@ -31,10 +35,10 @@ export function Shell() {
         <Route exact path={ `${ url }/thread/:threadId` }>
           <Thread />
         </Route>
-        <RouteForLogged path={ `${ url }/users/:userId` }>
+        <RouteForLogged path={ `${ url }/users/:userId` } logged={ logged }>
           <Profile />
         </RouteForLogged>
-        <RouteForLogged path={ `${ url }/category/:categoryId/create-thread` }>
+        <RouteForLogged path={ `${ url }/category/:categoryId/create-thread` } logged={ logged }>
           <CreateThread />
         </RouteForLogged>
         <Route path="*">

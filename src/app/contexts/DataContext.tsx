@@ -2,7 +2,6 @@ import { CategoryListItemModel, CategoryModel, PostModel, ThreadListItemModel, U
 import { createContext, MutableRefObject, ReactElement, useContext, useRef, useState } from 'react';
 import { HttpService } from '@services';
 import { endpoint, endpointWithProp, endpointWithQueryParams } from '@utils';
-import { SessionContext } from './SessionContext';
 import { NewThread, Reply } from '@interfaces';
 
 interface DataProviderProps {
@@ -29,7 +28,6 @@ interface DataContextProps {
 }
 
 const DataProvider = ({ children }: DataProviderProps): ReactElement => {
-  const { session } = useContext(SessionContext);
   const { Provider } = DataContext;
 
   const [categories, setCategories] = useState<CategoryListItemModel[]>([]);
@@ -45,7 +43,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       .post(
         endpoint.posts,
         reply,
-        session.token
+        // session.token
       )
       .then((newPost: PostModel) => {
         setPosts([
@@ -68,7 +66,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
       .post(
         endpoint.threads,
         thread,
-        session.token
+        // session.token
       )
       .then((newThread: ThreadListItemModel) => {
         setThreads([
@@ -80,7 +78,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
 
   const getCategories = (): void => {
     HttpService
-      .get(endpoint.categories, session.token)
+      .get(endpoint.categories,)//session.token)
       .then((categories: CategoryListItemModel[]) => {
         setCategories(categories);
       });
@@ -88,13 +86,13 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
 
   const getCategory = (categoryId: number): void => {
     HttpService
-      .get(endpointWithProp.category(categoryId), session.token)
+      .get(endpointWithProp.category(categoryId),)//session.token)
       .then((category: CategoryModel) => {
         setCategory(category);
       });
 
     HttpService
-      .get(endpointWithQueryParams.threads(categoryId), session.token)
+      .get(endpointWithQueryParams.threads(categoryId),)//session.token)
       .then((threads: ThreadListItemModel[]) => {
         setThreads(threads);
       });
@@ -102,29 +100,29 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
 
   const getThread = (threadId: number): void => {
     HttpService
-      .get(endpointWithProp.thread(threadId), session.token)
+      .get(endpointWithProp.thread(threadId),)//session.token)
       .then((thread: ThreadListItemModel) => {
         setThread(thread);
       });
 
     HttpService
-      .get(endpointWithQueryParams.posts(threadId), session.token)
+      .get(endpointWithQueryParams.posts(threadId),)//session.token)
       .then((posts: PostModel[]) => {
         setPosts(posts);
       });
   };
 
   const getUser = (userId: number): void => {
-    if (session.token) {
-      HttpService
-        .get(endpointWithProp.user(userId), session.token)
-        .then((user: User) => {
-          setUser({
-            ...user,
-            id: userId,
-          });
+    //if (session.token) {
+    HttpService
+      .get(endpointWithProp.user(userId),)//session.token)
+      .then((user: User) => {
+        setUser({
+          ...user,
+          id: userId,
         });
-    }
+      });
+    //}
   };
 
   return (

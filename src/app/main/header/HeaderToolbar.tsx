@@ -1,16 +1,19 @@
 import { AppBar, IconButton, Link, Toolbar, Typography } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
-import { ReactElement } from 'react';
+import { ReactElement, useEffect } from 'react';
 import styled from 'styled-components';
 import { HeaderLoginLinks } from './HeaderLoginLinks';
 import { LoggedUser } from './LoggedUser';
-import { SessionState } from '@store';
+import { SessionState } from '@interfaces';
 
 interface HeaderToolbarProps extends Pick<SessionState, 'logged' | 'currentUser'> {
   onLogout: () => void;
 }
 
 export function HeaderToolbar({ logged, currentUser, onLogout }: HeaderToolbarProps): ReactElement {
+  useEffect(() => {
+    console.log(typeof logged);
+  }, [logged]);
   return (
     <AppBar>
       <StyledToolbar>
@@ -29,8 +32,10 @@ export function HeaderToolbar({ logged, currentUser, onLogout }: HeaderToolbarPr
         </ToolbarPart>
         <ToolbarPart data-right>
           { typeof logged === 'boolean'
-            ? logged && currentUser
-              ? <LoggedUser user={ currentUser } onLogout={ onLogout } />
+            ? logged
+              ? currentUser
+                ? <LoggedUser user={ currentUser } onLogout={ onLogout } />
+                : null
               : <HeaderLoginLinks />
             : null
           }
