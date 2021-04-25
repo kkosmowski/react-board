@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { LoginPanel } from './LoginPanel';
 import { useEffect, useState } from 'react';
-import { LoginFormData, MainStore, RegisterFormData, SessionState } from '@interfaces';
+import { MainStore, SessionState } from '@store/interfaces';
+import { LoginFormData, RegisterFormData } from '@interfaces';
 import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import { RegisterPanel } from './RegisterPanel';
 import { connect } from 'react-redux';

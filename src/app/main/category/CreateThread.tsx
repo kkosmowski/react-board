@@ -9,7 +9,8 @@ import {
   Typography
 } from '@material-ui/core';
 import styled from 'styled-components';
-import { CategoryRouteParams, MainStore, NewThread, SessionState } from '@interfaces';
+import { CategoryRouteParams, NewThread } from '@interfaces';
+import { MainStore, SessionState } from '@store/interfaces';
 import { DataContext } from '@contexts';
 import { Role } from '@enums';
 import { useHistory, useParams } from 'react-router-dom';

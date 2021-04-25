@@ -53,6 +53,9 @@
       "@store/actions": [
         "src/app/store/actions"
       ],
+      "@store/interfaces": [
+        "src/app/store/interfaces"
+      ],
       "@store/reducers": [
         "src/app/store/reducers"
       ],

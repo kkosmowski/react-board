@@ -1,22 +1,22 @@
-import { UsersState } from '@interfaces';
+import { UserState } from '@store/interfaces';
 import { AnyAction } from 'redux';
-import { UsersActions } from '@store/actions';
+import { UserActions } from '@store/actions';
 
-const initialState: UsersState = {
+const initialState: UserState = {
   createAccountInProgress: false,
   users: []
 };
 
-export default function users(state = initialState, action: AnyAction): UsersState {
+export default function user(state = initialState, action: AnyAction): UserState {
   switch (action.type) {
-    case UsersActions.CREATE_ACCOUNT: {
+    case UserActions.CREATE_ACCOUNT: {
       return {
         ...state,
         createAccountInProgress: true,
       };
     }
 
-    case UsersActions.CREATE_ACCOUNT_SUCCESS: {
+    case UserActions.CREATE_ACCOUNT_SUCCESS: {
       return {
         ...state,
         createAccountInProgress: false,
@@ -24,7 +24,7 @@ export default function users(state = initialState, action: AnyAction): UsersSta
       };
     }
 
-    case UsersActions.CREATE_ACCOUNT_FAIL: {
+    case UserActions.CREATE_ACCOUNT_FAIL: {
       return {
         ...state,
         createAccountInProgress: false,
