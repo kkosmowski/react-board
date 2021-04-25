@@ -1,15 +1,23 @@
 import { Card, CardContent } from '@material-ui/core';
 import { ReactElement, useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { DataContext, SessionContext } from '@contexts';
-import { ProfileRouteParams } from '@interfaces';
+import { DataContext } from '@contexts';
+import { MainStore, ProfileRouteParams, SessionState } from '@interfaces';
 import { BackButton } from '@main';
 import { TimeUtil } from '@utils';
 import { DateFormat } from '@enums';
+import { bindActionCreators, Dispatch } from 'redux';
+import * as sessionActions from '../../store/actions/session.actions';
+import { connect } from 'react-redux';
 
-export function Profile(): ReactElement {
+interface MergedProps extends SessionState {
+  actions: any;
+}
+
+type ProfileComponentProps = Pick<MergedProps, 'logged'>;
+
+function ProfileComponent({ logged }: ProfileComponentProps): ReactElement {
   const { userId } = useParams<ProfileRouteParams>();
-  const { logged } = useContext(SessionContext);
   const { user, getUser } = useContext(DataContext);
 
   useEffect(() => {
@@ -35,3 +43,15 @@ export function Profile(): ReactElement {
     </>
   );
 }
+
+const mapStateToProps = ({ session }: MainStore) => ({
+  logged: session.logged,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  actions: bindActionCreators(sessionActions, dispatch),
+});
+
+const Profile = connect(mapStateToProps, mapDispatchToProps)(ProfileComponent);
+
+export { Profile };

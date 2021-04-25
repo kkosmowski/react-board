@@ -7,12 +7,18 @@ import { useContext, useEffect, useRef } from 'react';
 import { DataContext } from '@contexts';
 import { AppBreadcrumbs } from './AppBreadcrumbs';
 import { RouteForLogged } from './RouteForLogged';
+import { MainStore, SessionState } from '@interfaces';
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import * as sessionActions from '../store/actions/session.actions';
 
-interface ShellProps {
-  logged: boolean | null;
+interface MergedProps extends SessionState {
+  actions: any;
 }
 
-export function Shell({ logged }: ShellProps) {
+type ShellComponentProps = Pick<MergedProps, 'logged'>;
+
+function ShellComponent({ logged }: ShellComponentProps) {
   const { url } = useRouteMatch();
   const { setMainElement } = useContext(DataContext);
   const mainElement = useRef(document.body);
@@ -48,3 +54,15 @@ export function Shell({ logged }: ShellProps) {
     </main>
   );
 }
+
+const mapStateToProps = ({ session }: MainStore) => ({
+  logged: session.logged,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  actions: bindActionCreators(sessionActions, dispatch),
+});
+
+const Shell = connect(mapStateToProps, mapDispatchToProps)(ShellComponent);
+
+export { Shell };

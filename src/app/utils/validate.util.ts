@@ -39,8 +39,6 @@ export class Validate {
   }
 
   protected static email(value: string, error = this.defaultError): string {
-    console.log(value);
-    console.log(value.match(/([\w\d.]{2,}@[\w\d]{2,}\.[\w]{2,})/));
     if (!value.match(/([\w\d.]{2,}@[\w\d]{2,}\.[\w]{2,})/)) {
       error = 'Invalid email address.';
     }

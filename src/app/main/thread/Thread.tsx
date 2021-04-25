@@ -16,9 +16,9 @@ interface MergedProps extends SessionState {
   actions: any;
 }
 
-type ThreadComponentProps = Pick<MergedProps, 'logged' | 'actions'>;
+type ThreadComponentProps = Pick<MergedProps, 'logged' | 'currentUser' | 'actions'>;
 
-function ThreadComponent({ logged }: ThreadComponentProps): ReactElement {
+function ThreadComponent({ logged, currentUser }: ThreadComponentProps): ReactElement {
   const history = useHistory();
   const { threadId } = useParams<ThreadRouteParams>();
   const {
@@ -40,21 +40,23 @@ function ThreadComponent({ logged }: ThreadComponentProps): ReactElement {
   }, [threadId]);
 
   useEffect(() => {
-    const collection: ReactElement[] = [];
+    if (currentUser) {
+      const collection: ReactElement[] = [];
 
-    posts.forEach((post: PostModel, i: number) => {
-      collection.push(
-        <Post post={ post } key={ i } />
-      );
-    });
+      posts.forEach((post: PostModel, i: number) => {
+        collection.push(
+          <Post post={ post } currentUser={ currentUser } key={ i } />
+        );
+      });
 
-    setPostCollection(collection);
-    if (mainElement && mainElement.current) {
-      setTimeout(() => {
-        setThreadScrollable(mainElement.current.scrollHeight > window.innerHeight);
-      }, 0);
+      setPostCollection(collection);
+      if (mainElement && mainElement.current) {
+        setTimeout(() => {
+          setThreadScrollable(mainElement.current.scrollHeight > window.innerHeight);
+        }, 0);
+      }
     }
-  }, [posts]);
+  }, [currentUser, posts]);
 
   const handleReplyClick = () => {
     if (logged) {
@@ -112,6 +114,7 @@ function ThreadComponent({ logged }: ThreadComponentProps): ReactElement {
 
 const mapStateToProps = ({ session }: MainStore) => ({
   logged: session.logged,
+  currentUser: session.currentUser,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

@@ -9,19 +9,27 @@ import {
   Typography
 } from '@material-ui/core';
 import styled from 'styled-components';
-import { CategoryRouteParams, NewThread } from '@interfaces';
+import { CategoryRouteParams, MainStore, NewThread, SessionState } from '@interfaces';
 import { DataContext } from '@contexts';
 import { Role } from '@enums';
 import { useHistory, useParams } from 'react-router-dom';
 import { BackButton } from '@main';
+import { connect } from 'react-redux';
+import { bindActionCreators, Dispatch } from 'redux';
+import * as sessionActions from '../../store/actions/session.actions';
 
 type NewThreadErrors = Omit<NewThread, 'category_id' | 'pinned'>;
 
-export function CreateThread(): ReactElement {
+interface MergedProps extends SessionState {
+  actions: any;
+}
+
+type CreateThreadComponentProps = Pick<MergedProps, 'currentUser' | 'actions'>;
+
+function CreateThreadComponent({ currentUser, actions }: CreateThreadComponentProps): ReactElement {
   const history = useHistory();
   const { categoryId } = useParams<CategoryRouteParams>();
-  // pass Store to Category comp and then pass the currentUser to this presentational component
-  const { currentUser } = useContext(SessionContext);
+
   const { category, createThread, getCategory } = useContext(DataContext);
 
   const initialErrors: NewThreadErrors = {
@@ -126,7 +134,7 @@ export function CreateThread(): ReactElement {
               error={ !!errors.post_body.trim() }
             />
 
-            { currentUser.role === Role.Admin
+            { currentUser && currentUser.role === Role.Admin
               ? <PinnedCheckbox
                 value={ newThread.pinned }
                 control={ <Checkbox color="primary" onChange={ handleChange('pinned') } /> }
@@ -149,6 +157,18 @@ export function CreateThread(): ReactElement {
     </>
   );
 }
+
+const mapStateToProps = ({ session }: MainStore) => ({
+  currentUser: session.currentUser,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  actions: bindActionCreators(sessionActions, dispatch),
+});
+
+const CreateThread = connect(mapStateToProps, mapDispatchToProps)(CreateThreadComponent);
+
+export { CreateThread };
 
 const AddPostButton = styled(Button)`
   && {
