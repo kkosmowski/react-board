@@ -1,18 +1,17 @@
-import { ReactElement, useContext } from 'react';
-import { PostModel } from '@models';
+import { ReactElement } from 'react';
+import { CurrentUser, PostModel } from '@models';
 import { Link as RouterLink } from 'react-router-dom';
 import { DateFormat } from '@enums';
 import { TimeUtil } from '@utils';
 import styled from 'styled-components';
 import { Button, Card, CardContent } from '@material-ui/core';
-import { SessionContext } from '@contexts';
 
 interface PostProps {
   post: PostModel;
+  currentUser: CurrentUser;
 }
 
-export function Post({ post }: PostProps): ReactElement {
-  const { currentUser } = useContext(SessionContext);
+export function Post({ post, currentUser }: PostProps): ReactElement {
   return (
     <PostCard>
       <PostCardContent>

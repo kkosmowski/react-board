@@ -19,7 +19,7 @@ function App(): ReactElement {
             <AppWrapper>
               <BrowserRouter>
                 <Route path="/home">
-                  <Shell logged={ configureStore.getState().session.logged } />
+                  <Shell />
                 </Route>
                 <Route path="/auth">
                   <Auth />
