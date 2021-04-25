@@ -1,6 +1,6 @@
 import { User } from '@models';
 
-export interface UsersState {
+export interface UserState {
   createAccountInProgress: boolean;
   users: User[];
 }

@@ -9,7 +9,3 @@ export * from './reply.interface';
 export * from './route-params.interface';
 export * from './session.interface';
 export * from './thread-route-params.interface';
-
-export * from './main-store.interface';
-export * from './session-state.interface';
-export * from './users-state.interface';

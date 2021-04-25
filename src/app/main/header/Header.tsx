@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import { HeaderLogo } from './HeaderLogo';
 import { HeaderToolbar } from './HeaderToolbar';
-import { MainStore, SessionState } from '@interfaces';
+import { MainStore, SessionState } from '@store/interfaces';
 import { connect } from 'react-redux';
 import * as sessionActions from '../../store/actions/session.actions';
 import { bindActionCreators, Dispatch } from 'redux';

@@ -1,6 +1,6 @@
 import { SessionActions } from '@store/actions';
 import { AnyAction } from 'redux';
-import { SessionState } from '@interfaces';
+import { SessionState } from '@store/interfaces';
 
 const initialState: SessionState = {
   logged: null,

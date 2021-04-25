@@ -1,33 +1,53 @@
-import React, { ReactElement, useContext, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { CategoryListItemModel } from '@models';
 import { CategoryListItem } from './CategoryListItem';
-import { DataContext } from '@contexts'
 import { connect } from 'react-redux';
+import { CategoryState, MainStore } from '@store/interfaces';
+import { bindActionCreators } from 'redux';
+import { Dispatch } from '@types';
+import * as categoryActions from '../../store/actions/category.actions';
+import { Loader } from '../common/Loader';
 
-function CategoriesList(): ReactElement {
-  const { categories, getCategories } = useContext(DataContext);
+interface MergedProps extends CategoryState {
+  actions: any;
+}
+
+type CategoriesListComponentProps = Pick<MergedProps, 'categories' | 'categoriesLoading' | 'actions'>
+
+function CategoriesListComponent(
+  { categories, categoriesLoading, actions }: CategoriesListComponentProps
+): ReactElement {
   const [categoriesList, setCategoriesList] = useState<ReactElement[]>([]);
 
   useEffect(() => {
-    getCategories();
-  }, []);
+    actions.getCategories();
+  }, [actions]);
 
   useEffect(() => {
     if (categories) {
-      const list: ReactElement[] = [];
-
-      categories.forEach((category: CategoryListItemModel) => {
-        list.push(<CategoryListItem category={ category } key={ category.id } />);
-      });
-
+      const list: ReactElement[] = categories.map((category: CategoryListItemModel) =>
+        (<CategoryListItem category={ category } key={ category.id } />)
+      );
       setCategoriesList(list);
     }
   }, [categories]);
 
   return (
     <div className="root-container">
-      { categoriesList }
-    </div>);
+      { categoriesLoading ? <Loader centered size="64px" /> : categoriesList }
+    </div>
+  );
 }
 
-export default connect()(CategoriesList);
+const mapStateToProps = ({ category }: MainStore) => ({
+  categories: category.categories,
+  categoriesLoading: category.categoriesLoading,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  actions: bindActionCreators(categoryActions, dispatch)
+});
+
+const CategoriesList = connect(mapStateToProps, mapDispatchToProps)(CategoriesListComponent);
+
+export { CategoriesList };

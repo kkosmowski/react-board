@@ -4,7 +4,7 @@ import { ReactElement } from 'react';
 import styled from 'styled-components';
 import { HeaderLoginLinks } from './HeaderLoginLinks';
 import { LoggedUser } from './LoggedUser';
-import { SessionState } from '@interfaces';
+import { SessionState } from '@store/interfaces';
 
 interface HeaderToolbarProps extends Pick<SessionState, 'logged' | 'currentUser'> {
   onLogout: () => void;

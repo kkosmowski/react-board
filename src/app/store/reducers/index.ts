@@ -1,5 +1,12 @@
-import { combineReducers } from 'redux';
+import { combineReducers, ReducersMapObject } from 'redux';
 import session from './session.reducer';
-import users from './users.reducer';
+import user from './user.reducer';
+import category from './category.reducer';
 
-export default combineReducers({ session, users });
+const reducers: ReducersMapObject = {
+  session,
+  user,
+  category
+};
+
+export default combineReducers(reducers);

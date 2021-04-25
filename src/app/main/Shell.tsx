@@ -7,7 +7,7 @@ import { useContext, useEffect, useRef } from 'react';
 import { DataContext } from '@contexts';
 import { AppBreadcrumbs } from './AppBreadcrumbs';
 import { RouteForLogged } from './RouteForLogged';
-import { MainStore, SessionState } from '@interfaces';
+import { MainStore, SessionState } from '@store/interfaces';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import * as sessionActions from '../store/actions/session.actions';
