@@ -1,7 +1,7 @@
 import { Author } from './author.model';
 import { PostModel } from './post.model';
 
-export interface ThreadListItemModel {
+export interface ThreadModel {
   id: number;
   url: string;
   name: string;

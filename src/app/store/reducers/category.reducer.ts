@@ -7,6 +7,8 @@ const initialState: CategoryState = {
   categories: [],
   categoryLoading: false,
   category: null,
+  threadsLoading: false,
+  threads: [],
 };
 
 export default function category(state = initialState, action: AnyAction): CategoryState {
@@ -52,6 +54,29 @@ export default function category(state = initialState, action: AnyAction): Categ
       return {
         ...state,
         categoryLoading: false,
+      };
+    }
+
+    case CategoryActions.GET_THREADS: {
+      return {
+        ...state,
+        threadsLoading: true,
+      };
+    }
+
+    case CategoryActions.GET_THREADS_SUCCESS: {
+      return {
+        ...state,
+        threadsLoading: false,
+        threads: action.payload,
+      };
+    }
+
+    case CategoryActions.CLEAR_CATEGORY: {
+      return {
+        ...state,
+        category: null,
+        threads: [],
       };
     }
   }
