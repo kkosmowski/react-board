@@ -1,4 +1,4 @@
-import { CategoryListItemModel, CategoryModel, PostModel, ThreadListItemModel, User } from '@models';
+import { CategoryListItemModel, CategoryModel, PostModel, ThreadModel, User } from '@models';
 import { createContext, MutableRefObject, ReactElement, useContext, useRef, useState } from 'react';
 import { HttpService } from '@services';
 import { endpoint, endpointWithProp, endpointWithQueryParams } from '@utils';
@@ -22,8 +22,8 @@ interface DataContextProps {
   mainElement: MutableRefObject<HTMLElement>;
   posts: PostModel[];
   setMainElement: (element: MutableRefObject<HTMLElement>) => MutableRefObject<HTMLElement>;
-  thread: ThreadListItemModel;
-  threads: ThreadListItemModel[];
+  thread: ThreadModel;
+  threads: ThreadModel[];
   user: User;
 }
 
@@ -32,8 +32,8 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
 
   const [categories, setCategories] = useState<CategoryListItemModel[]>([]);
   const [category, setCategory] = useState<CategoryModel>(initialCategory);
-  const [threads, setThreads] = useState<ThreadListItemModel[]>([]);
-  const [thread, setThread] = useState<ThreadListItemModel>(initialThread);
+  const [threads, setThreads] = useState<ThreadModel[]>([]);
+  const [thread, setThread] = useState<ThreadModel>(initialThread);
   const [posts, setPosts] = useState<PostModel[]>([]);
   const [mainElement, setMainElement] = useState<MutableRefObject<HTMLElement>>(useRef(document.body));
   const [user, setUser] = useState<User>(initialUser);
@@ -68,7 +68,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
         thread,
         // session.token
       )
-      .then((newThread: ThreadListItemModel) => {
+      .then((newThread: ThreadModel) => {
         setThreads([
           ...threads,
           newThread
@@ -93,7 +93,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
 
     HttpService
       .get(endpointWithQueryParams.threads(categoryId),)//session.token)
-      .then((threads: ThreadListItemModel[]) => {
+      .then((threads: ThreadModel[]) => {
         setThreads(threads);
       });
   };
@@ -101,7 +101,7 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
   const getThread = (threadId: number): void => {
     HttpService
       .get(endpointWithProp.thread(threadId),)//session.token)
-      .then((thread: ThreadListItemModel) => {
+      .then((thread: ThreadModel) => {
         setThread(thread);
       });
 
@@ -153,7 +153,7 @@ const initialUser: User = {
   post_count: NaN,
 };
 
-const initialThread: ThreadListItemModel = {
+const initialThread: ThreadModel = {
   created_by: {
     id: NaN,
     url: '',

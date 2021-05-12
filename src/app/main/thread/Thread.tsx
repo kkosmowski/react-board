@@ -6,37 +6,30 @@ import { Post } from './Post';
 import { Button, Typography } from '@material-ui/core';
 import './Thread.scss';
 import { ThreadReply } from './ThreadReply';
-import { MainStore, SessionState } from '@store/interfaces';
+import { MainStore, SessionState, ThreadState } from '@store/interfaces';
 import { ThreadRouteParams } from '@interfaces';
 import { BackButton } from '@main';
 import { bindActionCreators, Dispatch } from 'redux';
-import * as sessionActions from '../../store/actions/session.actions';
+import * as threadActions from '../../store/actions/thread.actions';
 import { connect } from 'react-redux';
 
-interface MergedProps extends SessionState {
-  actions: any;
+interface MergedProps extends SessionState, ThreadState {
+  threadActions: any;
 }
 
-type ThreadComponentProps = Pick<MergedProps, 'logged' | 'currentUser' | 'actions'>;
+type ThreadComponentProps = Pick<MergedProps, 'logged' | 'currentUser' | 'thread' | 'posts' | 'threadActions'>;
 
-function ThreadComponent({ logged, currentUser }: ThreadComponentProps): ReactElement {
+function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: ThreadComponentProps): ReactElement {
   const history = useHistory();
   const { threadId } = useParams<ThreadRouteParams>();
-  const {
-    addReply,
-    clearThread,
-    mainElement,
-    posts,
-    thread,
-    getThread,
-  } = useContext(DataContext);
+  const { addReply, mainElement } = useContext(DataContext);
   const [postCollection, setPostCollection] = useState<ReactElement[]>([]);
   const [replyVisible, setReplyVisible] = useState(false);
   const [threadScrollable, setThreadScrollable] = useState(false);
 
   useEffect(() => {
     if (threadId) {
-      getThread(parseInt(threadId));
+      threadActions.getThread(threadId);
     }
   }, [threadId]);
 
@@ -87,7 +80,7 @@ function ThreadComponent({ logged, currentUser }: ThreadComponentProps): ReactEl
     </div>
   );
 
-  useEffect(() => clearThread, []);
+  useEffect(() => threadActions.clearThread, []);
 
   return (
     <>
@@ -95,7 +88,7 @@ function ThreadComponent({ logged, currentUser }: ThreadComponentProps): ReactEl
       <div className="thread root-container">
         <header className="thread__header">
           <hgroup className="thread__details">
-            <Typography variant="h4" component="h4">Thread: { thread.name }</Typography>
+            <Typography variant="h4" component="h4">Thread: { thread?.name }</Typography>
           </hgroup>
           <hgroup className="thread__controls">
             { createReplyButton() }
@@ -113,13 +106,15 @@ function ThreadComponent({ logged, currentUser }: ThreadComponentProps): ReactEl
   );
 }
 
-const mapStateToProps = ({ session }: MainStore) => ({
+const mapStateToProps = ({ session, thread }: MainStore) => ({
   logged: session.logged,
   currentUser: session.currentUser,
+  thread: thread.thread,
+  posts: thread.posts,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  actions: bindActionCreators(sessionActions, dispatch),
+  threadActions: bindActionCreators(threadActions, dispatch),
 });
 
 const Thread = connect(mapStateToProps, mapDispatchToProps)(ThreadComponent);

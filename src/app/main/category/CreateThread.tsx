@@ -135,7 +135,7 @@ function CreateThreadComponent({ currentUser, actions }: CreateThreadComponentPr
               error={ !!errors.post_body.trim() }
             />
 
-            { currentUser && currentUser.role === Role.Admin
+            { currentUser?.role === Role.Admin
               ? <PinnedCheckbox
                 value={ newThread.pinned }
                 control={ <Checkbox color="primary" onChange={ handleChange('pinned') } /> }

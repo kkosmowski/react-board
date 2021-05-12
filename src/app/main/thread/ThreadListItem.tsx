@@ -1,4 +1,4 @@
-import { ThreadListItemModel } from '@models';
+import { ThreadModel } from '@models';
 import React, { ReactElement } from 'react';
 import { Divider, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { Folder } from '@material-ui/icons';
@@ -6,7 +6,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface ThreadListItemProps {
-  thread: ThreadListItemModel;
+  thread: ThreadModel;
 }
 
 export function ThreadListItem({ thread }: ThreadListItemProps): ReactElement {
