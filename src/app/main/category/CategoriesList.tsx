@@ -3,25 +3,14 @@ import { CategoryListItemModel } from '@models';
 import { CategoryListItem } from './CategoryListItem';
 import { connect } from 'react-redux';
 import { CategoryState, MainStore } from '@store/interfaces';
-import { bindActionCreators } from 'redux';
-import { Dispatch } from '@types';
-import * as categoryActions from '../../store/actions/category.actions';
 import { Loader } from '../common/Loader';
 
-interface MergedProps extends CategoryState {
-  actions: any;
-}
-
-type CategoriesListComponentProps = Pick<MergedProps, 'categories' | 'categoriesLoading' | 'actions'>
+type CategoriesListComponentProps = Pick<CategoryState, 'categories' | 'categoriesLoading'>
 
 function CategoriesListComponent(
-  { categories, categoriesLoading, actions }: CategoriesListComponentProps
+  { categories, categoriesLoading }: CategoriesListComponentProps
 ): ReactElement {
   const [categoriesList, setCategoriesList] = useState<ReactElement[]>([]);
-
-  useEffect(() => {
-    actions.getCategories();
-  }, [actions]);
 
   useEffect(() => {
     if (categories) {
@@ -44,10 +33,6 @@ const mapStateToProps = ({ category }: MainStore) => ({
   categoriesLoading: category.categoriesLoading,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  actions: bindActionCreators(categoryActions, dispatch)
-});
-
-const CategoriesList = connect(mapStateToProps, mapDispatchToProps)(CategoriesListComponent);
+const CategoriesList = connect(mapStateToProps)(CategoriesListComponent);
 
 export { CategoriesList };

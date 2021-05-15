@@ -13,7 +13,7 @@ import { CategoryRouteParams, NewThread } from '@interfaces';
 import { MainStore, SessionState } from '@store/interfaces';
 import { DataContext } from '@contexts';
 import { Role } from '@enums';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { BackButton } from '@main';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
@@ -29,6 +29,7 @@ type CreateThreadComponentProps = Pick<MergedProps, 'currentUser' | 'actions'>;
 
 function CreateThreadComponent({ currentUser, actions }: CreateThreadComponentProps): ReactElement {
   const history = useHistory();
+  const location = useLocation();
   const { categoryId } = useParams<CategoryRouteParams>();
 
   const { category, createThread, getCategory } = useContext(DataContext);

@@ -10,6 +10,7 @@ export interface ThreadModel {
   pinned: boolean;
   post_count: number;
   last_post: PostModel;
+  category_id: number;
 }
 
 

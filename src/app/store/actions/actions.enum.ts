@@ -39,3 +39,8 @@ export enum ThreadActions {
   GET_POSTS_SUCCESS = 'GET_POSTS_SUCCESS',
   CLEAR_THREAD = 'CLEAR_THREAD',
 }
+
+export enum BreadcrumbsActions {
+  SET_BREADCRUMBS = 'SET_BREADCRUMBS',
+  POP_BREADCRUMB = 'POP_BREADCRUMB',
+}

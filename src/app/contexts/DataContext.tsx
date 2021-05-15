@@ -140,7 +140,10 @@ const DataProvider = ({ children }: DataProviderProps): ReactElement => {
 };
 
 const initialCategory: CategoryModel = {
+  id: NaN,
   name: '',
+  description: '',
+  thread_count: NaN,
 };
 
 const initialUser: User = {
@@ -174,6 +177,7 @@ const initialThread: ThreadModel = {
   pinned: false,
   post_count: NaN,
   url: '',
+  category_id: NaN,
 };
 
 const initialData: DataContextProps = {

@@ -4,7 +4,10 @@ import { UserActions } from '@store/actions';
 
 const initialState: UserState = {
   createAccountInProgress: false,
-  users: []
+  users: [],
+  usersLoading: false,
+  user: null,
+  userLoading: false,
 };
 
 export default function user(state = initialState, action: AnyAction): UserState {

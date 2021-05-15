@@ -38,7 +38,7 @@ function CategoryComponent(
   useEffect(() => {
     const collection: ReactElement[] = [];
 
-    threads?.forEach((thread: ThreadModel, i: number) => {
+    threads!.forEach((thread: ThreadModel, i: number) => {
       collection.push(
         <ThreadListItem thread={ thread } key={ i } />
       );
@@ -51,7 +51,7 @@ function CategoryComponent(
     history.push(`${ url }/create-thread`);
   };
 
-  useEffect(() => actions.clearCategory, []);
+  // useEffect(() => actions.clearCategory, []);
 
   return (
     <div className="root-container">
