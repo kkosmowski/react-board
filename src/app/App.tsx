@@ -7,12 +7,12 @@ import { Shell } from '@main';
 import { unstable_createMuiStrictModeTheme as createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import React from 'react';
 import { Provider } from 'react-redux';
-import configureStore from './store';
+import store from './store';
 import { AppWrapper } from './AppWrapper';
 
 function App(): ReactElement {
   return (
-    <Provider store={ configureStore }>
+    <Provider store={ store }>
       <DataProvider>
         <MuiThemeProvider theme={ theme }>
           <ThemeProvider theme={ theme }>

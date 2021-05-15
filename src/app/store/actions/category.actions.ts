@@ -1,13 +1,13 @@
 import { ActionFunction, Dispatch } from '@types';
-import { CategoryActions, ThreadActions } from './actions.enum';
+import { CategoryActions } from './actions.enum';
 import { HttpService } from '@services';
 import { endpoint, endpointWithProp, endpointWithQueryParams } from '@utils';
 import { CategoryListItemModel, CategoryModel, ThreadModel } from '@models';
 
-export function getCategories(): ActionFunction<void> {
-  return function (dispatch: Dispatch): void {
+export function getCategories(): ActionFunction<Promise<any>> {
+  return function (dispatch: Dispatch): Promise<any> {
     dispatch({ type: CategoryActions.GET_CATEGORIES });
-    HttpService
+    return HttpService
       .get(endpoint.categories)
       .then((categories: CategoryListItemModel[]) => {
         dispatch({ type: CategoryActions.GET_CATEGORIES_SUCCESS, payload: categories });

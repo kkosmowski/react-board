@@ -1,6 +1,6 @@
 import { ReactElement, useContext, useEffect, useState } from 'react';
 import { DataContext } from '@contexts';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams, useRouteMatch } from 'react-router-dom';
 import { PostModel } from '@models';
 import { Post } from './Post';
 import { Button, Typography } from '@material-ui/core';
@@ -12,6 +12,7 @@ import { BackButton } from '@main';
 import { bindActionCreators, Dispatch } from 'redux';
 import * as threadActions from '../../store/actions/thread.actions';
 import { connect } from 'react-redux';
+import { BreadcrumbsService } from '@services';
 
 interface MergedProps extends SessionState, ThreadState {
   threadActions: any;
@@ -21,11 +22,16 @@ type ThreadComponentProps = Pick<MergedProps, 'logged' | 'currentUser' | 'thread
 
 function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: ThreadComponentProps): ReactElement {
   const history = useHistory();
+  const location = useLocation();
   const { threadId } = useParams<ThreadRouteParams>();
   const { addReply, mainElement } = useContext(DataContext);
   const [postCollection, setPostCollection] = useState<ReactElement[]>([]);
   const [replyVisible, setReplyVisible] = useState(false);
   const [threadScrollable, setThreadScrollable] = useState(false);
+
+  useEffect(() => {
+    BreadcrumbsService.setBreadcrumbs(location.pathname);
+  }, [thread]);
 
   useEffect(() => {
     if (threadId) {
@@ -106,7 +112,7 @@ function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: 
   );
 }
 
-const mapStateToProps = ({ session, thread }: MainStore) => ({
+const mapStateToProps = ({ category, session, thread }: MainStore) => ({
   logged: session.logged,
   currentUser: session.currentUser,
   thread: thread.thread,

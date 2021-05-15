@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@material-ui/core';
 import { ReactElement, useContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useRouteMatch } from 'react-router-dom';
 import { DataContext } from '@contexts';
 import { ProfileRouteParams } from '@interfaces';
 import { MainStore, SessionState } from '@store/interfaces';

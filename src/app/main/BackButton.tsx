@@ -3,12 +3,13 @@ import { Button } from '@material-ui/core';
 import { ArrowBack } from '@material-ui/icons';
 import styled from 'styled-components';
 import { useHistory } from 'react-router-dom';
+import { BreadcrumbsService } from '@services';
 
 export function BackButton(): ReactElement {
   const history = useHistory();
 
   const handleBack = () => {
-    history.goBack();
+    history.replace(BreadcrumbsService.previous().route);
   };
 
   return (
