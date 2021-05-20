@@ -7,4 +7,5 @@ export interface CategoryState {
   category: CategoryModel | null;
   threadsLoading: boolean;
   threads: ThreadModel[];
+  createThreadInProgress: boolean;
 }

@@ -1,31 +1,37 @@
 import { Card, CardContent } from '@material-ui/core';
-import { ReactElement, useContext, useEffect } from 'react';
-import { useParams, useRouteMatch } from 'react-router-dom';
-import { DataContext } from '@contexts';
+import { ReactElement, useEffect } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import { ProfileRouteParams } from '@interfaces';
-import { MainStore, SessionState } from '@store/interfaces';
+import { MainStore, SessionState, UserState } from '@store/interfaces';
 import { BackButton } from '@main';
 import { TimeUtil } from '@utils';
 import { DateFormat } from '@enums';
 import { bindActionCreators, Dispatch } from 'redux';
-import * as sessionActions from '../../store/actions/session.actions';
+import * as userActions from '../../store/actions/user.actions';
 import { connect } from 'react-redux';
+import { BreadcrumbsService } from '@services';
 
-interface MergedProps extends SessionState {
+interface MergedProps extends SessionState, UserState {
   actions: any;
 }
 
-type ProfileComponentProps = Pick<MergedProps, 'logged'>;
+type ProfileComponentProps = Pick<MergedProps, 'logged' | 'user' | 'actions'>;
 
-function ProfileComponent({ logged }: ProfileComponentProps): ReactElement {
+function ProfileComponent({ logged, user, actions }: ProfileComponentProps): ReactElement {
   const { userId } = useParams<ProfileRouteParams>();
-  const { user, getUser } = useContext(DataContext);
+  const location = useLocation();
 
   useEffect(() => {
     if (logged && userId) {
-      getUser(parseInt(userId));
+      actions.getUser(parseInt(userId));
     }
   }, [userId, logged]);
+
+  useEffect(() => {
+    if (user) {
+      BreadcrumbsService.setBreadcrumbs(location.pathname);
+    }
+  }, [user]);
 
   return (
     <>
@@ -33,11 +39,11 @@ function ProfileComponent({ logged }: ProfileComponentProps): ReactElement {
       <div className="root-container">
         <Card>
           <CardContent className="container__content">
-            <p>Id: { user.id }</p>
-            <p>Email: { user.email }</p>
-            <p>Username: { user.username }</p>
-            <p>Post count: { user.post_count }</p>
-            <p>Joined at: { TimeUtil.format(user.date_joined, DateFormat.Date) }</p>
+            <p>Id: { user?.id }</p>
+            <p>Email: { user?.email }</p>
+            <p>Username: { user?.username }</p>
+            <p>Post count: { user?.post_count }</p>
+            <p>Joined at: { user ? TimeUtil.format(user.date_joined, DateFormat.Date) : '' }</p>
           </CardContent>
         </Card>
       </div>
@@ -45,12 +51,13 @@ function ProfileComponent({ logged }: ProfileComponentProps): ReactElement {
   );
 }
 
-const mapStateToProps = ({ session }: MainStore) => ({
+const mapStateToProps = ({ session, user }: MainStore) => ({
   logged: session.logged,
+  user: user.user,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  actions: bindActionCreators(sessionActions, dispatch),
+  actions: bindActionCreators(userActions, dispatch),
 });
 
 const Profile = connect(mapStateToProps, mapDispatchToProps)(ProfileComponent);

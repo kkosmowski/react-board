@@ -1,8 +1,10 @@
 import { ActionFunction, Dispatch } from '@types';
 import { HttpService } from '@services';
-import { endpointWithProp, endpointWithQueryParams } from '@utils';
+import { endpoint, endpointWithProp, endpointWithQueryParams } from '@utils';
 import { PostModel, ThreadModel } from '@models';
 import { ThreadActions } from './actions.enum';
+import { Reply } from '@interfaces';
+import store from '@store';
 
 export function getThread(threadId: number): ActionFunction<void> {
   return function (dispatch: Dispatch): void {
@@ -17,20 +19,44 @@ export function clearThread(): ActionFunction<void> {
   };
 }
 
+export function addReply(reply: Reply): ActionFunction<Promise<void>> {
+  const token = store.getState().session.session.token;
+  return function (dispatch: Dispatch): Promise<void> {
+    dispatch({ type: ThreadActions.ADD_REPLY });
+    return HttpService
+      .post(endpoint.posts, reply, token)
+      .then((post: PostModel) => {
+        dispatch({ type: ThreadActions.ADD_REPLY_SUCCESS, payload: post });
+      })
+      .catch((error: Error) => {
+        dispatch({ type: ThreadActions.ADD_REPLY_FAIL });
+        console.error(error);
+      });
+  };
+}
+
 function fetchThread(threadId: number, dispatch: Dispatch): void {
   dispatch({ type: ThreadActions.GET_THREAD });
   HttpService
-    .get(endpointWithProp.thread(threadId),)//session.token)
+    .get(endpointWithProp.thread(threadId))
     .then((thread: ThreadModel) => {
       dispatch({ type: ThreadActions.GET_THREAD_SUCCESS, payload: thread });
+    })
+    .catch((error: Error) => {
+      dispatch({ type: ThreadActions.GET_THREAD_FAIL });
+      console.error(error);
     });
 }
 
 function fetchPosts(threadId: number, dispatch: Dispatch): void {
   dispatch({ type: ThreadActions.GET_POSTS });
   HttpService
-    .get(endpointWithQueryParams.posts(threadId),)//session.token)
+    .get(endpointWithQueryParams.posts(threadId))
     .then((posts: PostModel[]) => {
       dispatch({ type: ThreadActions.GET_POSTS_SUCCESS, payload: posts });
+    })
+    .catch((error: Error) => {
+      dispatch({ type: ThreadActions.GET_POSTS_FAIL });
+      console.error(error);
     });
 }
