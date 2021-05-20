@@ -7,6 +7,7 @@ const initialState: ThreadState = {
   posts: [],
   threadLoading: false,
   thread: null,
+  addingReplyInProgress: false,
 };
 
 export default function thread(state = initialState, action: AnyAction): ThreadState {
@@ -15,6 +16,12 @@ export default function thread(state = initialState, action: AnyAction): ThreadS
       return {
         ...state,
         postsLoading: true,
+      };
+    }
+    case ThreadActions.GET_POSTS_FAIL: {
+      return {
+        ...state,
+        postsLoading: false,
       };
     }
 
@@ -33,6 +40,13 @@ export default function thread(state = initialState, action: AnyAction): ThreadS
       };
     }
 
+    case ThreadActions.GET_THREAD_FAIL: {
+      return {
+        ...state,
+        threadLoading: false,
+      };
+    }
+
     case ThreadActions.GET_THREAD_SUCCESS: {
       return {
         ...state,
@@ -46,6 +60,28 @@ export default function thread(state = initialState, action: AnyAction): ThreadS
         ...state,
         thread: null,
         posts: [],
+      };
+    }
+
+    case ThreadActions.ADD_REPLY: {
+      return {
+        ...state,
+        addingReplyInProgress: true,
+      };
+    }
+
+    case ThreadActions.ADD_REPLY_FAIL: {
+      return {
+        ...state,
+        addingReplyInProgress: false,
+      };
+    }
+
+    case ThreadActions.ADD_REPLY_SUCCESS: {
+      return {
+        ...state,
+        addingReplyInProgress: false,
+        posts: [...state.posts, action.payload],
       };
     }
   }

@@ -1,5 +1,5 @@
 import store from '@store';
-import { CategoryModel, ThreadModel, User } from '@models';
+import { CategoryModel, ThreadModel } from '@models';
 import { Breadcrumb } from '@interfaces';
 import { BreadcrumbsActions } from '@store/actions';
 import { BreadcrumbsState } from '@store/interfaces';
@@ -14,9 +14,7 @@ enum Segment {
 
 export class BreadcrumbsService {
   private static readonly homeBreadcrumb: Breadcrumb = { route: '/home', name: 'Home' };
-  private static categories: CategoryModel[];
   private static thread: ThreadModel;
-  private static user: User;
   private static splitPath: string[];
 
   static setBreadcrumbs(path: string): void {
@@ -25,7 +23,6 @@ export class BreadcrumbsService {
       .split('/') // ['home', 'category', '2']
       .slice(1); // ['category', '2']
     const threadNecessary = this.splitPath.includes(Segment.Thread);
-    this.categories = this.getCategories();
     this.thread = this.getThread();
 
     if ((threadNecessary && this.thread) || !threadNecessary) {
@@ -49,7 +46,7 @@ export class BreadcrumbsService {
     };
 
     this.splitPath.forEach((segment, i) => {
-      let breadcrumbName: string = '';
+      let breadcrumbName = '';
       let id = null;
       let shouldPush = true;
 
@@ -67,8 +64,7 @@ export class BreadcrumbsService {
           break;
         }
         case Segment.Profile: {
-          shouldPush = false;
-          // breadcrumbName = this.getUsername();
+          breadcrumbName = this.getUsername() + '\'s profile';
           break;
         }
         case Segment.NewThread: {
@@ -100,11 +96,11 @@ export class BreadcrumbsService {
     return store.getState().thread.thread;
   }
 
-  private static getCategoryName(categoryId: number) {
-    return this.categories.find((category) => category.id === categoryId)?.name || '';
+  private static getCategoryName(categoryId: number): string {
+    return this.getCategories().find((category) => category.id === categoryId)?.name || '';
   }
 
-  private static getUsername() {
-    return this.user?.username || '';
+  private static getUsername(): string {
+    return store.getState().user.user?.username || '';
   }
 }

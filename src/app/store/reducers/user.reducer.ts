@@ -3,7 +3,6 @@ import { AnyAction } from 'redux';
 import { UserActions } from '@store/actions';
 
 const initialState: UserState = {
-  createAccountInProgress: false,
   users: [],
   usersLoading: false,
   user: null,
@@ -12,25 +11,25 @@ const initialState: UserState = {
 
 export default function user(state = initialState, action: AnyAction): UserState {
   switch (action.type) {
-    case UserActions.CREATE_ACCOUNT: {
+    case UserActions.GET_USER: {
       return {
         ...state,
-        createAccountInProgress: true,
+        userLoading: true,
       };
     }
 
-    case UserActions.CREATE_ACCOUNT_SUCCESS: {
+    case UserActions.GET_USER_SUCCESS: {
       return {
         ...state,
-        createAccountInProgress: false,
-        users: [...state.users, action.payload],
+        userLoading: false,
+        user: action.payload,
       };
     }
 
-    case UserActions.CREATE_ACCOUNT_FAIL: {
+    case UserActions.GET_USER_FAIL: {
       return {
         ...state,
-        createAccountInProgress: false,
+        userLoading: false,
       };
     }
   }

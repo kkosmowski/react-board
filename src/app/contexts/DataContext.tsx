@@ -1,8 +1,10 @@
 import { CategoryListItemModel, CategoryModel, PostModel, ThreadModel, User } from '@models';
-import { createContext, MutableRefObject, ReactElement, useContext, useRef, useState } from 'react';
+import { createContext, MutableRefObject, ReactElement, useRef, useState } from 'react';
 import { HttpService } from '@services';
 import { endpoint, endpointWithProp, endpointWithQueryParams } from '@utils';
 import { NewThread, Reply } from '@interfaces';
+
+//@todo: remake into ui context
 
 interface DataProviderProps {
   children: ReactElement | ReactElement[];

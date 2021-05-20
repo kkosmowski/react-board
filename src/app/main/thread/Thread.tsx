@@ -1,6 +1,6 @@
 import { ReactElement, useContext, useEffect, useState } from 'react';
 import { DataContext } from '@contexts';
-import { useHistory, useLocation, useParams, useRouteMatch } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { PostModel } from '@models';
 import { Post } from './Post';
 import { Button, Typography } from '@material-ui/core';
@@ -24,7 +24,7 @@ function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: 
   const history = useHistory();
   const location = useLocation();
   const { threadId } = useParams<ThreadRouteParams>();
-  const { addReply, mainElement } = useContext(DataContext);
+  const { mainElement } = useContext(DataContext);
   const [postCollection, setPostCollection] = useState<ReactElement[]>([]);
   const [replyVisible, setReplyVisible] = useState(false);
   const [threadScrollable, setThreadScrollable] = useState(false);
@@ -102,7 +102,7 @@ function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: 
         </header>
         { postCollection }
         { replyVisible
-          ? <ThreadReply onAddReply={ addReply } logged={ logged } />
+          ? <ThreadReply onAddReply={ threadActions.addReply } logged={ logged } />
           : threadScrollable
             ? createReplyButton()
             : null
@@ -112,7 +112,7 @@ function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: 
   );
 }
 
-const mapStateToProps = ({ category, session, thread }: MainStore) => ({
+const mapStateToProps = ({ session, thread }: MainStore) => ({
   logged: session.logged,
   currentUser: session.currentUser,
   thread: thread.thread,

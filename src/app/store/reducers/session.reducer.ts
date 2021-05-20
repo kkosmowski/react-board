@@ -8,6 +8,7 @@ const initialState: SessionState = {
   session: null,
   currentUser: null,
   currentUserLoading: false,
+  createAccountInProgress: false,
 };
 
 // todo: change AnyAction
@@ -65,6 +66,27 @@ export default function session(state = initialState, action: AnyAction): Sessio
         ...state,
         currentUserLoading: false,
         currentUser: action.payload,
+      };
+    }
+
+    case SessionActions.CREATE_ACCOUNT: {
+      return {
+        ...state,
+        createAccountInProgress: true,
+      };
+    }
+
+    case SessionActions.CREATE_ACCOUNT_SUCCESS: {
+      return {
+        ...state,
+        createAccountInProgress: false,
+      };
+    }
+
+    case SessionActions.CREATE_ACCOUNT_FAIL: {
+      return {
+        ...state,
+        createAccountInProgress: false,
       };
     }
 

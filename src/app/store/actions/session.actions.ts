@@ -3,7 +3,7 @@ import { LoginPayload } from '@payloads';
 import { endpoint, SessionUtil } from '@utils';
 import { LoginResponse, MeResponse } from '@responses';
 import { SessionActions } from '@store/actions';
-import { LoginFormData, Session } from '@interfaces';
+import { LoginFormData, RegisterFormData, Session } from '@interfaces';
 import { ActionFunction, Dispatch } from '@types';
 
 export function login(form: LoginFormData): ActionFunction<Promise<boolean>> {
@@ -15,7 +15,6 @@ export function login(form: LoginFormData): ActionFunction<Promise<boolean>> {
         password: form.password,
       }).then((response: LoginResponse) => {
         if (response.token) {
-
           const session: Session = {
             token: response.token,
             email: form.email,
@@ -26,8 +25,9 @@ export function login(form: LoginFormData): ActionFunction<Promise<boolean>> {
           dispatch({ type: SessionActions.LOGIN_FAIL });
         }
         return !!response.token;
-      }).catch(() => {
+      }).catch((error: Error) => {
         dispatch({ type: SessionActions.LOGIN_FAIL });
+        console.error(error);
         return false;
       });
   };
@@ -73,6 +73,10 @@ export function getCurrentUser(session: Session): ActionFunction<Promise<void>> 
             role: data.role
           }
         });
+      })
+      .catch((error: Error) => {
+        dispatch({ type: SessionActions.GET_CURRENT_USER_FAIL });
+        console.error(error);
       });
   };
 }
@@ -87,5 +91,20 @@ export function checkIfSessionExists(): ActionFunction<void> {
     } else {
       dispatch({ type: SessionActions.NO_SESSION_FOUND });
     }
+  };
+}
+
+export function createAccount(formData: RegisterFormData): ActionFunction<Promise<void>> {
+  return function (dispatch: Dispatch): Promise<void> {
+    dispatch({ type: SessionActions.CREATE_ACCOUNT });
+    return HttpService
+      .post<RegisterFormData>(endpoint.register, formData)
+      .then((response) => {
+        dispatch({ type: SessionActions.CREATE_ACCOUNT_SUCCESS });
+        return response;
+      }).catch((error: Error) => {
+        dispatch({ type: SessionActions.CREATE_ACCOUNT_FAIL });
+        console.error(error);
+      });
   };
 }

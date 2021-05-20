@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, ReactElement, useContext, useEffect, useState } from 'react';
+import React, { ChangeEvent, FormEvent, ReactElement, useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -9,51 +9,47 @@ import {
   Typography
 } from '@material-ui/core';
 import styled from 'styled-components';
-import { CategoryRouteParams, NewThread } from '@interfaces';
-import { MainStore, SessionState } from '@store/interfaces';
-import { DataContext } from '@contexts';
+import { NewThread } from '@interfaces';
+import { CategoryState, MainStore, SessionState } from '@store/interfaces';
 import { Role } from '@enums';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { BackButton } from '@main';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import * as sessionActions from '../../store/actions/session.actions';
+import * as categoryActions from '../../store/actions/category.actions';
+import { ThreadModel } from '@models';
 
 type NewThreadErrors = Omit<NewThread, 'category_id' | 'pinned'>;
 
-interface MergedProps extends SessionState {
+interface MergedProps extends SessionState, CategoryState {
   actions: any;
 }
 
-type CreateThreadComponentProps = Pick<MergedProps, 'currentUser' | 'actions'>;
+type CreateThreadComponentProps = Pick<MergedProps, 'currentUser' | 'category' | 'actions'>;
 
-function CreateThreadComponent({ currentUser, actions }: CreateThreadComponentProps): ReactElement {
+function CreateThreadComponent({ currentUser, category, actions }: CreateThreadComponentProps): ReactElement {
   const history = useHistory();
-  const location = useLocation();
-  const { categoryId } = useParams<CategoryRouteParams>();
-
-  const { category, createThread, getCategory } = useContext(DataContext);
-
   const initialErrors: NewThreadErrors = {
     name: ' ',
     post_body: ' ',
   };
-
   const [newThread, setNewThread] = useState<NewThread>({
-    category_id: parseInt(categoryId),
+    category_id: NaN,
     name: '',
     pinned: false,
     post_body: '',
   });
-
   const [errors, setErrors] = useState(initialErrors);
   const [formValid, setFormValid] = useState(false);
 
   useEffect(() => {
-    if (categoryId) {
-      getCategory(parseInt(categoryId));
+    if (category) {
+      setNewThread({
+        ...newThread,
+        category_id: category.id,
+      });
     }
-  }, [categoryId]);
+  }, [category]);
 
   const handleChange = (change: keyof NewThread) => (event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target;
@@ -72,6 +68,7 @@ function CreateThreadComponent({ currentUser, actions }: CreateThreadComponentPr
   };
 
   const validateForm = () => {
+    // @todo: validate touched inputs only
     const _errors = { ...initialErrors };
 
     if (!newThread.name.trim()) {
@@ -93,8 +90,10 @@ function CreateThreadComponent({ currentUser, actions }: CreateThreadComponentPr
     validateForm();
 
     if (formValid) {
-      createThread(newThread).then(() => {
-        history.push(`/home/category/${ categoryId }`);
+      actions.createThread(newThread).then((thread: ThreadModel) => {
+        if (thread && thread.id) {
+          history.replace(`/home/thread/${ thread.id }`);
+        }
       });
     }
   };
@@ -105,7 +104,7 @@ function CreateThreadComponent({ currentUser, actions }: CreateThreadComponentPr
       <form onSubmit={ handleSubmit } className="root-container">
         <Card>
           <CardContent className="container__content">
-            <CreateThreadTitle variant="h5">Create new thread in { category.name }</CreateThreadTitle>
+            <CreateThreadTitle variant="h5">Create new thread in { category?.name }</CreateThreadTitle>
             <TextField
               value={ newThread.name }
               onChange={ handleChange('name') }
@@ -160,12 +159,13 @@ function CreateThreadComponent({ currentUser, actions }: CreateThreadComponentPr
   );
 }
 
-const mapStateToProps = ({ session }: MainStore) => ({
+const mapStateToProps = ({ session, category }: MainStore) => ({
   currentUser: session.currentUser,
+  category: category.category,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  actions: bindActionCreators(sessionActions, dispatch),
+  actions: bindActionCreators(categoryActions, dispatch),
 });
 
 const CreateThread = connect(mapStateToProps, mapDispatchToProps)(CreateThreadComponent);

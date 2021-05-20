@@ -7,4 +7,5 @@ export interface SessionState {
   session: Session | null;
   currentUser: CurrentUser | null;
   currentUserLoading: boolean;
+  createAccountInProgress: boolean;
 }

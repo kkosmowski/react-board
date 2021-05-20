@@ -5,4 +5,5 @@ export interface ThreadState {
   posts: PostModel[];
   threadLoading: boolean;
   thread: ThreadModel | null;
+  addingReplyInProgress: boolean;
 }

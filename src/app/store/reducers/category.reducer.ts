@@ -9,6 +9,7 @@ const initialState: CategoryState = {
   category: null,
   threadsLoading: false,
   threads: [],
+  createThreadInProgress: false,
 };
 
 export default function category(state = initialState, action: AnyAction): CategoryState {
@@ -20,6 +21,13 @@ export default function category(state = initialState, action: AnyAction): Categ
       };
     }
 
+    case CategoryActions.GET_CATEGORIES_FAIL: {
+      return {
+        ...state,
+        categoriesLoading: false,
+      };
+    }
+
     case CategoryActions.GET_CATEGORIES_SUCCESS: {
       return {
         ...state,
@@ -28,17 +36,17 @@ export default function category(state = initialState, action: AnyAction): Categ
       };
     }
 
-    case CategoryActions.GET_CATEGORIES_FAIL: {
-      return {
-        ...state,
-        categoriesLoading: false,
-      };
-    }
-
     case CategoryActions.GET_CATEGORY: {
       return {
         ...state,
         categoryLoading: true,
+      };
+    }
+
+    case CategoryActions.GET_CATEGORY_FAIL: {
+      return {
+        ...state,
+        categoryLoading: false,
       };
     }
 
@@ -50,17 +58,17 @@ export default function category(state = initialState, action: AnyAction): Categ
       };
     }
 
-    case CategoryActions.GET_CATEGORY_FAIL: {
-      return {
-        ...state,
-        categoryLoading: false,
-      };
-    }
-
     case CategoryActions.GET_THREADS: {
       return {
         ...state,
         threadsLoading: true,
+      };
+    }
+
+    case CategoryActions.GET_THREADS_FAIL: {
+      return {
+        ...state,
+        threadsLoading: false,
       };
     }
 
@@ -69,6 +77,27 @@ export default function category(state = initialState, action: AnyAction): Categ
         ...state,
         threadsLoading: false,
         threads: action.payload,
+      };
+    }
+
+    case CategoryActions.CREATE_THREAD: {
+      return {
+        ...state,
+        createThreadInProgress: true,
+      };
+    }
+
+    case CategoryActions.CREATE_THREAD_FAIL: {
+      return {
+        ...state,
+        createThreadInProgress: false,
+      };
+    }
+
+    case CategoryActions.CREATE_THREAD_SUCCESS: {
+      return {
+        ...state,
+        createThreadInProgress: false,
       };
     }
 
