@@ -1,5 +1,5 @@
 import { ReactElement, useContext, useEffect, useState } from 'react';
-import { DataContext } from '@contexts';
+import { UiContext } from '@contexts';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { PostModel } from '@models';
 import { Post } from './Post';
@@ -24,7 +24,7 @@ function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: 
   const history = useHistory();
   const location = useLocation();
   const { threadId } = useParams<ThreadRouteParams>();
-  const { mainElement } = useContext(DataContext);
+  const { mainElement } = useContext(UiContext);
   const [postCollection, setPostCollection] = useState<ReactElement[]>([]);
   const [replyVisible, setReplyVisible] = useState(false);
   const [threadScrollable, setThreadScrollable] = useState(false);

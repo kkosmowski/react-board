@@ -1,7 +1,7 @@
 import { ReactElement } from 'react';
 import { Auth } from '@auth';
 import { ThemeProvider } from 'styled-components';
-import { DataProvider } from '@contexts';
+import { UiProvider } from '@contexts';
 import { BrowserRouter, Redirect, Route } from 'react-router-dom';
 import { Shell } from '@main';
 import { unstable_createMuiStrictModeTheme as createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
@@ -13,7 +13,7 @@ import { AppWrapper } from './AppWrapper';
 function App(): ReactElement {
   return (
     <Provider store={ store }>
-      <DataProvider>
+      <UiProvider>
         <MuiThemeProvider theme={ theme }>
           <ThemeProvider theme={ theme }>
             <AppWrapper>
@@ -31,7 +31,7 @@ function App(): ReactElement {
             </AppWrapper>
           </ThemeProvider>
         </MuiThemeProvider>
-      </DataProvider>
+      </UiProvider>
     </Provider>
   );
 }
