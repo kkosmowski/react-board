@@ -4,7 +4,7 @@ import { Redirect, Route, Switch, useLocation, useRouteMatch, withRouter } from 
 import { Thread } from '@main/thread';
 import { Profile } from '@main/profile';
 import { useContext, useEffect, useRef } from 'react';
-import { DataContext } from '@contexts';
+import { UiContext } from '@contexts';
 import { Breadcrumbs } from './Breadcrumbs';
 import { RouteForLogged } from './RouteForLogged';
 import { CategoryState, MainStore, SessionState } from '@store/interfaces';
@@ -23,7 +23,7 @@ type ShellComponentProps = Pick<MergedProps, 'logged' | 'categoryActions'>;
 function ShellComponent({ logged, categoryActions }: ShellComponentProps) {
   const location = useLocation();
   const { url } = useRouteMatch();
-  const { setMainElement } = useContext(DataContext);
+  const { setMainElement } = useContext(UiContext);
   const mainElement = useRef(document.body);
 
   useEffect(() => {
