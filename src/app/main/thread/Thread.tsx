@@ -15,12 +15,12 @@ import { connect } from 'react-redux';
 import { BreadcrumbsService } from '@services';
 
 interface MergedProps extends SessionState, ThreadState {
-  threadActions: any;
+  actions: any;
 }
 
-type ThreadComponentProps = Pick<MergedProps, 'logged' | 'currentUser' | 'thread' | 'posts' | 'threadActions'>;
+type ThreadComponentProps = Pick<MergedProps, 'logged' | 'currentUser' | 'thread' | 'posts' | 'actions'>;
 
-function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: ThreadComponentProps): ReactElement {
+function ThreadComponent({ logged, currentUser, thread, posts, actions }: ThreadComponentProps): ReactElement {
   const history = useHistory();
   const location = useLocation();
   const { threadId } = useParams<ThreadRouteParams>();
@@ -35,7 +35,7 @@ function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: 
 
   useEffect(() => {
     if (threadId) {
-      threadActions.getThread(threadId);
+      actions.getThread(threadId);
     }
   }, [threadId]);
 
@@ -45,7 +45,12 @@ function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: 
 
       posts.forEach((post: PostModel, i: number) => {
         collection.push(
-          <Post post={ post } currentUser={ currentUser } key={ i } />
+          <Post
+            post={ post }
+            currentUser={ currentUser }
+            update={ handlePostUpdate }
+            key={ i }
+          />
         );
       });
 
@@ -71,7 +76,15 @@ function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: 
     }
   };
 
-  // TODO: Add post edit if created_by.id === currentUser.id
+  const handlePostUpdate = (postBody: string, callback: () => void) => {
+    actions.updatePost({ threadId, postBody }).then(() => {
+      callback();
+    });
+  };
+
+  // 1. TODO: Add post edit if created_by.id === currentUser.id
+  // 2. TODO: Add User password change
+  // 3. TODO: Profile improvements
   const createReplyButton = (): ReactElement => (
     <div>
       <Button
@@ -86,7 +99,7 @@ function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: 
     </div>
   );
 
-  useEffect(() => threadActions.clearThread, []);
+  useEffect(() => actions.clearThread, []);
 
   return (
     <>
@@ -102,7 +115,7 @@ function ThreadComponent({ logged, currentUser, thread, posts, threadActions }: 
         </header>
         { postCollection }
         { replyVisible
-          ? <ThreadReply onAddReply={ threadActions.addReply } logged={ logged } />
+          ? <ThreadReply onAddReply={ actions.addReply } logged={ logged } />
           : threadScrollable
             ? createReplyButton()
             : null
@@ -120,7 +133,7 @@ const mapStateToProps = ({ session, thread }: MainStore) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  threadActions: bindActionCreators(threadActions, dispatch),
+  actions: bindActionCreators(threadActions, dispatch),
 });
 
 const Thread = connect(mapStateToProps, mapDispatchToProps)(ThreadComponent);

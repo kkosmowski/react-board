@@ -3,6 +3,7 @@ export * from './breadcrumb.interface';
 export * from './category-route-params.interface';
 export * from './login-form-data.interface';
 export * from './new-thread.interface';
+export * from './post-update.interface';
 export * from './profile-route-params.interface';
 export * from './register-form-data.interface';
 export * from './repeat-password-validation-errors.interface';

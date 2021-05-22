@@ -35,6 +35,29 @@ export function addReply(reply: Reply): ActionFunction<Promise<void>> {
   };
 }
 
+interface UpdatePostProps {
+  threadId: number;
+  postBody: string;
+}
+
+export function updatePost({ threadId, postBody }: UpdatePostProps): ActionFunction<Promise<void>> {
+  const token = store.getState().session.session.token;
+  return function (dispatch: Dispatch): Promise<void> {
+    dispatch({ type: ThreadActions.UPDATE_POST });
+    return HttpService
+      // @todo: find out whether it should be patch and get the endpoint details
+      .patch(endpointWithProp.post(threadId), postBody, token)
+      .then((post: PostModel) => {
+        dispatch({ type: ThreadActions.UPDATE_POST_SUCCESS, payload: post });
+      })
+      .catch((error: Error) => {
+        dispatch({ type: ThreadActions.UPDATE_POST_FAIL });
+        console.error(error);
+      });
+  };
+
+}
+
 function fetchThread(threadId: number, dispatch: Dispatch): void {
   dispatch({ type: ThreadActions.GET_THREAD });
   HttpService

@@ -32,6 +32,7 @@ export const endpointWithProp: EndpointWithProp = {
   category: (categoryId: number) => endpointFactory(`categories/${ categoryId }`),
   thread: (threadId: number) => endpointFactory(`threads/${ threadId }`),
   user: (userId: number) => endpointFactory(`users/${ userId }`),
+  post: (threadId: number) => endpointFactory(`threads/${ threadId }`),
 };
 
 export const endpointWithQueryParams: EndpointWithProp = {
