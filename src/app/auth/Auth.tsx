@@ -74,5 +74,5 @@ const AuthWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #333;
+  background-color: var(--background-color);
 `;

@@ -1,7 +1,9 @@
-@import url('//fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap');
+@import url('//fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
 
 html {
-  font: 16px 'Roboto', sans-serif;
+  font: 300 16px 'Roboto', sans-serif;
+  --white-text: #ddd;
+  --background-color: #333;
 }
 
 body, hr, p, h1, h2, h3, h4, h5, h6 {
@@ -16,8 +18,8 @@ html,
 body,
 #root {
   height: 100%;
-  background-color: #333;
-  color: #ddd;
+  background-color: var(--background-color);
+  color: var(--white-text);
 }
 
 #root {
@@ -71,4 +73,8 @@ a {
     padding-left: 24px;
     padding-right: 24px;
   }
+}
+
+strong {
+  font-weight: 500;
 }

@@ -44,7 +44,6 @@ export function ThreadReply({ onAddReply, logged }: ThreadReplyProps): ReactElem
         <TextField
           value={ replyBody }
           onChange={ handleReplyChange }
-          id="standard-multiline-static"
           label="Reply"
           multiline
           rows={ 3 }
