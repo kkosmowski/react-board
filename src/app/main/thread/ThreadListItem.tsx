@@ -49,7 +49,7 @@ export function ThreadListItem({ thread }: ThreadListItemProps): ReactElement {
         </ThreadInfo>
 
         <ThreadPostCount>
-          { thread.post_count } posts
+          { thread.post_count } { thread.post_count > 1 ? 'posts' : 'post' }
         </ThreadPostCount>
 
         <ThreadDetails>
@@ -86,9 +86,11 @@ const ThreadInfo = styled.div`
   display: flex;
   flex-direction: column;
   flex: 5;
+
   .thread__title span {
     letter-spacing: 0.4px;
   }
+
   .thread__author {
     font-size: 14px;
     opacity: .75;
