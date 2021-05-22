@@ -30,7 +30,7 @@ export class SessionUtil {
   }
 
   static setSession(session: Session): void {
-    if (session.persisted) {
+    if (session.persisted) { // @todo: add cookie expiration date
       Cookies.set(SessionKey.Token, session.token);
       Cookies.set(SessionKey.Email, session.email);
       this.persisted = true;
