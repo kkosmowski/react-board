@@ -38,8 +38,9 @@ export function loginSuccess(session: Session, alreadyPersisted = false): Action
     dispatch({ type: SessionActions.LOGIN_SUCCESS, payload: session });
     dispatch(getCurrentUser(session));
 
-    if (session.persisted && !alreadyPersisted) {
-      dispatch(persistSession(session));
+    if (!alreadyPersisted) {
+      dispatch(session.persisted ? persistSession(session) : saveSession(session));
+      SessionUtil.setSession(session);
     }
   };
 }
@@ -47,7 +48,12 @@ export function loginSuccess(session: Session, alreadyPersisted = false): Action
 export function persistSession(session: Session): ActionFunction<void> {
   return function (dispatch: Dispatch): void {
     dispatch({ type: SessionActions.SESSION_PERSISTED });
-    SessionUtil.setSession(session);
+  };
+}
+
+export function saveSession(session: Session): ActionFunction<void> {
+  return function (dispatch: Dispatch): void {
+    dispatch({ type: SessionActions.SESSION_SAVED });
   };
 }
 
@@ -87,6 +93,7 @@ export function checkIfSessionExists(): ActionFunction<void> {
     const existingSession: Session | null = SessionUtil.checkIfSessionExists();
 
     if (existingSession) {
+      dispatch({ type: SessionActions.SESSION_FOUND });
       dispatch(loginSuccess(existingSession, true));
     } else {
       dispatch({ type: SessionActions.NO_SESSION_FOUND });
