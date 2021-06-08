@@ -1,10 +1,11 @@
-import { AppBar, IconButton, Link, Toolbar, Typography } from '@material-ui/core';
-import { Menu } from '@material-ui/icons';
 import { ReactElement } from 'react';
 import styled from 'styled-components';
 import { HeaderLoginLinks } from './HeaderLoginLinks';
 import { LoggedUser } from './LoggedUser';
 import { SessionState } from '@store/interfaces';
+import { Menu } from 'antd';
+import { Header as HeaderBar } from 'antd/es/layout/layout';
+import { Link } from 'react-router-dom';
 
 interface HeaderToolbarProps extends Pick<SessionState, 'logged' | 'currentUser'> {
   onLogout: () => void;
@@ -12,45 +13,47 @@ interface HeaderToolbarProps extends Pick<SessionState, 'logged' | 'currentUser'
 
 export function HeaderToolbar({ logged, currentUser, onLogout }: HeaderToolbarProps): ReactElement {
   return (
-    <AppBar>
-      <StyledToolbar>
-        <ToolbarPart data-left>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="Open drawer"
-          >
-            <Menu />
-          </IconButton>
+    <StyledToolbar theme="light">
+      <ToolbarPart data-left>
+        <TitleLink to="/home">
+          <h1>React Board</h1>
+        </TitleLink>
+      </ToolbarPart>
+      <Menu theme="light" mode="horizontal">
 
-          <Typography component="h1" variant="h6">
-            <Link href="/home" color="initial" underline="none">React Board</Link>
-          </Typography>
-        </ToolbarPart>
-        <ToolbarPart data-right>
-          { typeof logged === 'boolean'
-            ? logged
-              ? currentUser
-                ? <LoggedUser user={ currentUser } onLogout={ onLogout } />
-                : null
-              : <HeaderLoginLinks />
-            : null
-          }
-        </ToolbarPart>
-      </StyledToolbar>
-    </AppBar>
+      </Menu>
+      <ToolbarPart data-right>
+        { typeof logged === 'boolean'
+          ? logged
+            ? currentUser
+              ? <LoggedUser user={ currentUser } onLogout={ onLogout } />
+              : null
+            : <HeaderLoginLinks />
+          : null
+        }
+      </ToolbarPart>
+    </StyledToolbar>
   );
 }
 
+const StyledToolbar = styled(HeaderBar)`
+  & {
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-column-gap: 16px;
+    height: 72px;
+    padding: 0 48px;
+  }
+`;
 
 const ToolbarPart = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
+  color: #fff;
 
   &[data-right] {
     justify-content: flex-end;
-    color: ${ props => props.theme.palette.secondary.main };
 
     * + * {
       margin-left: 32px;
@@ -58,9 +61,9 @@ const ToolbarPart = styled.div`
   }
 `;
 
-const StyledToolbar = styled(Toolbar)`
-  && {
-    padding-left: 48px;
-    padding-right: 48px;
+// @todo: paint primary on hover
+const TitleLink = styled(Link)`
+  &:hover {
+    text-decoration: none;
   }
 `;

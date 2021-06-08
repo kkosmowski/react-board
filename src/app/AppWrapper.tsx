@@ -15,7 +15,7 @@ function AppWrapperComponent({ children, actions }: AppWrapperProps): ReactEleme
   },[]);
 
   return (
-    <Wrapper>
+    <Wrapper className="app-wrapper" data-theme="light" >
       { children }
     </Wrapper>
   )
@@ -29,7 +29,7 @@ const AppWrapper = connect(null, mapDispatchToProps)(AppWrapperComponent);
 
 export { AppWrapper };
 
-const Wrapper = styled.div`
+const Wrapper = styled.main`
   display: flex;
   flex-direction: column;
   height: 100%;

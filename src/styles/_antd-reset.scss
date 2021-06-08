@@ -1,0 +1,24 @@
+// inline overrides
+
+.ant-dropdown {
+  min-width: 100px !important;
+}
+
+header {
+  h1 {
+    color: #fff;
+  }
+}
+
+// file overrides
+.app-wrapper[data-theme="light"] {
+  .ant-layout-header,
+  .ant-menu {
+    background: var(--primary);
+    color: var(--text-light-100);
+  }
+
+  .ant-menu-horizontal {
+    border-bottom: 0;
+  }
+}

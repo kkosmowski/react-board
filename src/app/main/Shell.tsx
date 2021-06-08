@@ -13,6 +13,7 @@ import { Dispatch } from '@types';
 import { bindActionCreators } from 'redux';
 import * as categoryActions from '../store/actions/category.actions';
 import { BreadcrumbsService } from '@services';
+import { Layout } from 'antd';
 
 interface MergedProps extends SessionState, CategoryState {
   categoryActions: any;
@@ -37,7 +38,8 @@ function ShellComponent({ logged, categoryActions }: ShellComponentProps) {
   }, [mainElement, mainElement.current]);
 
   return (
-    <main className="board" ref={ mainElement }>
+    // <Layout className="board" ref={ mainElement }>
+    <Layout className="board">
       <Header />
       <Breadcrumbs />
       <Switch>
@@ -60,7 +62,7 @@ function ShellComponent({ logged, categoryActions }: ShellComponentProps) {
           <Redirect to="/home" />
         </Route>
       </Switch>
-    </main>
+    </Layout>
   );
 }
 

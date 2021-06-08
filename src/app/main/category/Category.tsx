@@ -1,14 +1,6 @@
-import { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { ThreadModel } from '@models';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
-import {
-  Button,
-  Card,
-  CardContent,
-  List,
-  Typography
-} from '@material-ui/core';
-import React from 'react';
 import styled from 'styled-components';
 import { ThreadListItem } from '@main/thread';
 import { CategoryRouteParams } from '@interfaces';
@@ -16,6 +8,7 @@ import { CategoryState, MainStore, ThreadState } from '@store/interfaces';
 import { bindActionCreators, Dispatch } from 'redux';
 import * as categoryActions from '../../store/actions/category.actions';
 import { connect } from 'react-redux';
+import { Button, Card, List } from 'antd';
 
 interface MergedProps extends CategoryState, ThreadState {
   actions: any;
@@ -57,19 +50,17 @@ function CategoryComponent(
     <div className="root-container">
       <CategoryCard>
         <CategoryContent>
-          <Typography component="h5" variant="h5">{ category?.name }</Typography>
+          <h2>{ category?.name }</h2>
 
           <Button
-            type="button"
+            type="primary"
             title="New thread"
-            color="secondary"
-            variant="contained"
             onClick={ handleNewThread }
           >
             New thread
           </Button>
         </CategoryContent>
-        <List>
+        <List size="large">
           { threadCollection }
         </List>
       </CategoryCard>
@@ -97,7 +88,7 @@ const CategoryCard = styled(Card)`
   }
 `;
 
-const CategoryContent = styled(CardContent)`
+const CategoryContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;

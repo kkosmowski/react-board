@@ -45,7 +45,7 @@ const CategoryLink = styled(Link)`
     text-decoration: none;
 
     h5 {
-      color: ${ props => props.theme.palette.secondary.main };
+      color: gold;
       width: 100%;
     }
   }

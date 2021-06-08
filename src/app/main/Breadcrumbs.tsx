@@ -57,6 +57,6 @@ const StyledBreadcrumbs = styled(MuiBreadcrumbs)`
   padding-top: 16px;
 
   a {
-    color: ${ props => props.theme.palette.secondary.main };
+    color: gold;
   }
 `;
