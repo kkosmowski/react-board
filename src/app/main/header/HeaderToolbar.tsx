@@ -13,11 +13,13 @@ interface HeaderToolbarProps extends Pick<SessionState, 'logged' | 'currentUser'
 
 export function HeaderToolbar({ logged, currentUser, onLogout }: HeaderToolbarProps): ReactElement {
   return (
-    <StyledToolbar theme="light">
+    <StyledToolbar>
       <ToolbarPart data-left>
-        <TitleLink to="/home">
-          <h1>React Board</h1>
-        </TitleLink>
+        <h1>
+          <TitleLink to="/home">
+            React Board
+          </TitleLink>
+        </h1>
       </ToolbarPart>
       <Menu theme="light" mode="horizontal">
 
@@ -41,7 +43,7 @@ const StyledToolbar = styled(HeaderBar)`
     display: grid;
     grid-template-columns: 1fr 4fr 1fr;
     grid-column-gap: 16px;
-    height: 72px;
+    height: 64px;
     padding: 0 48px;
   }
 `;

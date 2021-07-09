@@ -6,6 +6,7 @@ import { Shell } from '@main';
 import { Provider } from 'react-redux';
 import store from './store';
 import { AppWrapper } from './AppWrapper';
+import './App.less';
 
 function App(): ReactElement {
   return (
